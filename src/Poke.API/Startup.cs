@@ -1,39 +1,116 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
+using Poke.Infra.Context;
 
 namespace Poke.API
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        private readonly IConfiguration Configuration;
+        private readonly IWebHostEnvironment WebHostEnvironment;
+
+        public Startup(
+            IConfiguration configuration,
+            IWebHostEnvironment webHostEnvironment
+        )
         {
+            Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
+
+            var healthCheck = services.AddHealthChecksUI(
+                setupSettings: setup =>
+                {
+                    setup.DisableDatabaseMigrations();
+                    setup.MaximumHistoryEntriesPerEndpoint(6);
+                }
+            ).AddInMemoryStorage();
+
+            var builder = services.AddHealthChecks();
+
+            builder.AddProcessAllocatedMemoryHealthCheck(
+                500 * 1024 * 1024,
+                "Process Memory",
+                tags: new[] { "self" }
+            );
+
+            builder.AddPrivateMemoryHealthCheck(
+                500 * 1024 * 1024,
+                "Private memory",
+                tags: new[] { "self" }
+            );
+
+            builder.AddNpgSql(
+                Configuration["ConnectionStrings:PokemonDB"],
+                tags: new[] { "services" }
+            );
+
+            services.AddDbContext<EntityContext>(
+                options => options.UseNpgsql(
+                    Configuration.GetConnectionString("PokemonDB")
+                )
+            );
+
+            services.AddSingleton<DbConnection>(
+                conn => new NpgsqlConnection(Configuration.GetConnectionString(
+                    "PokemonDB"
+                ))
+            );
+
+            services.AddScoped<DapperContext>();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHealthChecks(
+                "/health",
+                new HealthCheckOptions()
+                {
+                    AllowCachingResponses = false,
+                    Predicate = r => r.Tags.Contains("self"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                }
+            );
+
+            app.UseHealthChecks(
+                "/ready",
+                new HealthCheckOptions()
+                {
+                    AllowCachingResponses = false,
+                    Predicate = r => r.Tags.Contains("services"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                }
+            );
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
