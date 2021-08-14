@@ -64,14 +64,15 @@ namespace Poke.API
 
             services.AddDbContext<EntityContext>(
                 options => options.UseNpgsql(
-                    Configuration.GetConnectionString("PokemonDB")
+                    Configuration.GetConnectionString("PokemonDB"),
+                    b => b.MigrationsAssembly("Poke.Infra")
                 )
             );
 
             services.AddSingleton<DbConnection>(
-                conn => new NpgsqlConnection(Configuration.GetConnectionString(
-                    "PokemonDB"
-                ))
+                conn => new NpgsqlConnection(
+                    Configuration.GetConnectionString("PokemonDB")
+                )
             );
 
             services.AddScoped<DapperContext>();

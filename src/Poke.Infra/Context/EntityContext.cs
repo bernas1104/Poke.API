@@ -9,7 +9,8 @@ namespace Poke.Infra.Context
     {
         public DbSet<Pokemon> Pokemons { get; set; }
         public DbSet<BaseStats> BaseStats { get; set; }
-        public DbSet<Traning> Tranings { get; set; }
+        public DbSet<Training> Tranings { get; set; }
+        public DbSet<Evolution> Evolutions { get; set; }
 
         public EntityContext(DbContextOptions<EntityContext> options)
             : base(options) {  }
@@ -17,8 +18,9 @@ namespace Poke.Infra.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PokemonMap());
+            modelBuilder.ApplyConfiguration(new EvolutionMap());
             modelBuilder.ApplyConfiguration(new BaseStatsMap());
-            modelBuilder.ApplyConfiguration(new TraningMap());
+            modelBuilder.ApplyConfiguration(new TrainingMap());
         }
     }
 }
