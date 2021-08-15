@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Poke.Core.Entities;
 
-namespace Poke.Core.Entities
+namespace Poke.Core.ValueObjects
 {
     [Table("Evolutions")]
     public class Evolution
@@ -11,9 +11,7 @@ namespace Poke.Core.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Guid PokemonEvolutionId { get; set; }
-        public Guid PokemonPreEvolutionId { get; set; }
-        public Pokemon PokemonEvolution { get; set; }
-        public Pokemon PokemonPreEvolution { get; set; }
+        public Guid PkmnEvolutionId { get; set; }
+        public Pokemon PkmnEvolution { get; set; }
     }
 }

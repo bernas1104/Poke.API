@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poke.Core.Entities;
+using Poke.Core.ValueObjects;
 
 namespace Poke.Infra.Mappings
 {
@@ -16,20 +16,9 @@ namespace Poke.Infra.Mappings
                 .HasColumnName("id")
                 .HasColumnType("integer");
 
-            builder.Property(x => x.PokemonEvolutionId)
-                .HasColumnName("pokemon_evolution_id");
-
-            builder.Property(x => x.PokemonPreEvolutionId)
-                .HasColumnName("pokemon_pre_evolution_id");
-
-            builder.HasOne(x => x.PokemonPreEvolution)
-                .WithMany()
-                .HasForeignKey(x => x.PokemonPreEvolutionId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(x => x.PokemonEvolution)
+            builder.HasOne(x => x.PkmnEvolution)
                 .WithMany(x => x.Evolutions)
-                .HasForeignKey(x => x.PokemonEvolutionId);
+                .HasForeignKey(x => x.PkmnEvolutionId);
         }
     }
 }

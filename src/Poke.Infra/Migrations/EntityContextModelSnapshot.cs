@@ -19,31 +19,6 @@ namespace Poke.Infra.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("Poke.Core.Entities.Evolution", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<Guid>("PokemonEvolutionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pokemon_evolution_id");
-
-                    b.Property<Guid>("PokemonPreEvolutionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pokemon_pre_evolution_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PokemonEvolutionId");
-
-                    b.HasIndex("PokemonPreEvolutionId");
-
-                    b.ToTable("Evolutions", "dbo");
-                });
-
             modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
                 {
                     b.Property<Guid>("Id")
@@ -141,6 +116,43 @@ namespace Poke.Infra.Migrations
                     b.ToTable("BaseStats", "dbo");
                 });
 
+            modelBuilder.Entity("Poke.Core.ValueObjects.Evolution", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid>("PkmnEvolutionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PkmnEvolutionId");
+
+                    b.ToTable("Evolutions", "dbo");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.PreEvolution", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid>("PkmnPreEvolutionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PkmnPreEvolutionId")
+                        .IsUnique();
+
+                    b.ToTable("PreEvolutions", "dbo");
+                });
+
             modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
                 {
                     b.Property<int>("Id")
@@ -181,25 +193,6 @@ namespace Poke.Infra.Migrations
                     b.ToTable("Tranings", "dbo");
                 });
 
-            modelBuilder.Entity("Poke.Core.Entities.Evolution", b =>
-                {
-                    b.HasOne("Poke.Core.Entities.Pokemon", "PokemonEvolution")
-                        .WithMany("Evolutions")
-                        .HasForeignKey("PokemonEvolutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Poke.Core.Entities.Pokemon", "PokemonPreEvolution")
-                        .WithMany()
-                        .HasForeignKey("PokemonPreEvolutionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("PokemonEvolution");
-
-                    b.Navigation("PokemonPreEvolution");
-                });
-
             modelBuilder.Entity("Poke.Core.ValueObjects.BaseStats", b =>
                 {
                     b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
@@ -209,6 +202,28 @@ namespace Poke.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Pokemon");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.Evolution", b =>
+                {
+                    b.HasOne("Poke.Core.Entities.Pokemon", "PkmnEvolution")
+                        .WithMany("Evolutions")
+                        .HasForeignKey("PkmnEvolutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PkmnEvolution");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.PreEvolution", b =>
+                {
+                    b.HasOne("Poke.Core.Entities.Pokemon", "PkmnPreEvolution")
+                        .WithOne("PreEvolution")
+                        .HasForeignKey("Poke.Core.ValueObjects.PreEvolution", "PkmnPreEvolutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PkmnPreEvolution");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
@@ -227,6 +242,8 @@ namespace Poke.Infra.Migrations
                     b.Navigation("BaseStats");
 
                     b.Navigation("Evolutions");
+
+                    b.Navigation("PreEvolution");
 
                     b.Navigation("Traning");
                 });
