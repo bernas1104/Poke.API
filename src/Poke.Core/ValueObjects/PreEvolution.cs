@@ -5,7 +5,7 @@ using Poke.Core.Entities;
 
 namespace Poke.Core.ValueObjects
 {
-    [Table("PreEvolutions")]
+    [Table("pre_evolution")]
     public class PreEvolution
     {
         [Key]

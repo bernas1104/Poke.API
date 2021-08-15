@@ -69,7 +69,7 @@ namespace Poke.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pokemons", "dbo");
+                    b.ToTable("pokemon", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.BaseStats", b =>
@@ -113,7 +113,7 @@ namespace Poke.Infra.Migrations
                     b.HasIndex("PokemonId")
                         .IsUnique();
 
-                    b.ToTable("BaseStats", "dbo");
+                    b.ToTable("base_stats", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.Evolution", b =>
@@ -125,13 +125,14 @@ namespace Poke.Infra.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<Guid>("PkmnEvolutionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("pkmn_evolution_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PkmnEvolutionId");
 
-                    b.ToTable("Evolutions", "dbo");
+                    b.ToTable("evolution", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.PreEvolution", b =>
@@ -143,14 +144,15 @@ namespace Poke.Infra.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<Guid>("PkmnPreEvolutionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("pkmn_pre_evolution_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PkmnPreEvolutionId")
                         .IsUnique();
 
-                    b.ToTable("PreEvolutions", "dbo");
+                    b.ToTable("pre_evolution", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
@@ -190,7 +192,7 @@ namespace Poke.Infra.Migrations
                     b.HasIndex("PokemonId")
                         .IsUnique();
 
-                    b.ToTable("Tranings", "dbo");
+                    b.ToTable("traning", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.BaseStats", b =>

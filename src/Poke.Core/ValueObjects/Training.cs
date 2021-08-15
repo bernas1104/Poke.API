@@ -5,7 +5,7 @@ using Poke.Core.Entities.Enumerations;
 
 namespace Poke.Core.ValueObjects
 {
-    [Table("Trainings")]
+    [Table("trainings")]
     public class Training
     {
         public int Id { get; set; }

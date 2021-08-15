@@ -7,7 +7,7 @@ using Poke.Core.ValueObjects;
 
 namespace Poke.Core.Entities
 {
-    [Table("Pokemons")]
+    [Table("pokemon")]
     public class Pokemon
     {
         [Key]

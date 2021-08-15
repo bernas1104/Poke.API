@@ -5,7 +5,7 @@ using Poke.Core.Entities;
 
 namespace Poke.Core.ValueObjects
 {
-    [Table("Evolutions")]
+    [Table("evolutions")]
     public class Evolution
     {
         [Key]

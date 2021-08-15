@@ -8,7 +8,7 @@ namespace Poke.Infra.Mappings
     {
         public void Configure(EntityTypeBuilder<Training> builder)
         {
-            builder.ToTable("Tranings", "dbo");
+            builder.ToTable("traning", "dbo");
 
             builder.HasKey(x => x.Id);
 

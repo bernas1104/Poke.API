@@ -12,7 +12,7 @@ namespace Poke.Infra.Repositories
     {
         private readonly DapperContext _dapperContext;
         private readonly string _selectQuery = $@"SELECT *
-            FROM dbo.Pokemon";
+            FROM dbo.pokemon";
 
         public PokemonsRepository(
             EntityContext context,

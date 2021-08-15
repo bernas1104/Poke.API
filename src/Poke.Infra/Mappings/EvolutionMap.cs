@@ -8,13 +8,17 @@ namespace Poke.Infra.Mappings
     {
         public void Configure(EntityTypeBuilder<Evolution> builder)
         {
-            builder.ToTable("Evolutions", "dbo");
+            builder.ToTable("evolution", "dbo");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasColumnType("integer");
+
+            builder.Property(x => x.PkmnEvolutionId)
+                .HasColumnName("pkmn_evolution_id")
+                .HasColumnType("uuid");
 
             builder.HasOne(x => x.PkmnEvolution)
                 .WithMany(x => x.Evolutions)

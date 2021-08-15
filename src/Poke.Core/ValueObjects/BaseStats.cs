@@ -4,7 +4,7 @@ using Poke.Core.Entities;
 
 namespace Poke.Core.ValueObjects
 {
-    [Table("BaseStats")]
+    [Table("base_stats")]
     public class BaseStats
     {
         public int Id { get; set; }

@@ -11,7 +11,7 @@ namespace Poke.Infra.Mappings
     {
         public void Configure(EntityTypeBuilder<Pokemon> builder)
         {
-            builder.ToTable("Pokemons", "dbo");
+            builder.ToTable("pokemon", "dbo");
 
             builder.HasKey(x => x.Id);
 
