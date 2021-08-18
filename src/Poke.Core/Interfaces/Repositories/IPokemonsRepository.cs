@@ -4,7 +4,7 @@ using Poke.Core.Entities;
 
 namespace Poke.Core.Interfaces.Repositories
 {
-    public interface IPokemonsRepository
+    public interface IPokemonsRepository : IEntityBaseRepository<Pokemon>
     {
         Task<IEnumerable<Pokemon>> GetAllAsync();
     }

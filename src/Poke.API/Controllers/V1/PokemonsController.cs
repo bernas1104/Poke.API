@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Poke.Application.Services.Interfaces;
+using Poke.Core.Entities;
 
 namespace Poke.API.Controllers.V1
 {
@@ -8,18 +11,17 @@ namespace Poke.API.Controllers.V1
     [Produces("application/json")]
     public class PokemonsController : ControllerBase
     {
-        //
+        private readonly IPokemonsService _pokemonsService;
 
-        public PokemonsController()
-        {}
+        public PokemonsController(IPokemonsService pokemonsService)
+        {
+            _pokemonsService = pokemonsService;
+        }
 
         [HttpGet]
-        public async Task<IActionResult> GetByNumber(
-            [FromRoute] int pokemonNumber
-        )
+        public async Task<ActionResult<IEnumerable<Pokemon>>> GetAll()
         {
-            await Task.Delay(1);
-            return Ok();
+            return Ok(await _pokemonsService.GetAllAsync());
         }
     }
 }
