@@ -5,7 +5,7 @@ using Poke.Infra.Context;
 
 namespace Poke.Infra.Repositories
 {
-    public class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity> 
+    public class EntityBaseRepository<TEntity> : IEntityBaseRepository<TEntity>
         where TEntity : class
     {
         protected readonly EntityContext _context;

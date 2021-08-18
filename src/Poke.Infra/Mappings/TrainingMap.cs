@@ -42,7 +42,8 @@ namespace Poke.Infra.Mappings
                 .IsRequired(true);
 
             builder.Property(x => x.PokemonId)
-                .HasColumnName("pokemon_id");
+                .HasColumnName("pokemon_id")
+                .HasColumnType("uuid");
         }
     }
 }

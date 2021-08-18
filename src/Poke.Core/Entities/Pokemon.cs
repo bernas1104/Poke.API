@@ -23,7 +23,5 @@ namespace Poke.Core.Entities
         public PokemonType? SecondType { get; set; }
         public Training Traning { get; set; }
         public BaseStats BaseStats { get; set; }
-        public PreEvolution PreEvolution { get; set; }
-        public IEnumerable<Evolution> Evolutions { get; set; }
     }
 }

@@ -69,6 +69,9 @@ namespace Poke.Infra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Number")
+                        .IsUnique();
+
                     b.ToTable("pokemon", "dbo");
                 });
 
@@ -114,45 +117,6 @@ namespace Poke.Infra.Migrations
                         .IsUnique();
 
                     b.ToTable("base_stats", "dbo");
-                });
-
-            modelBuilder.Entity("Poke.Core.ValueObjects.Evolution", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<Guid>("PkmnEvolutionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pkmn_evolution_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PkmnEvolutionId");
-
-                    b.ToTable("evolution", "dbo");
-                });
-
-            modelBuilder.Entity("Poke.Core.ValueObjects.PreEvolution", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<Guid>("PkmnPreEvolutionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pkmn_pre_evolution_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PkmnPreEvolutionId")
-                        .IsUnique();
-
-                    b.ToTable("pre_evolution", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
@@ -206,28 +170,6 @@ namespace Poke.Infra.Migrations
                     b.Navigation("Pokemon");
                 });
 
-            modelBuilder.Entity("Poke.Core.ValueObjects.Evolution", b =>
-                {
-                    b.HasOne("Poke.Core.Entities.Pokemon", "PkmnEvolution")
-                        .WithMany("Evolutions")
-                        .HasForeignKey("PkmnEvolutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PkmnEvolution");
-                });
-
-            modelBuilder.Entity("Poke.Core.ValueObjects.PreEvolution", b =>
-                {
-                    b.HasOne("Poke.Core.Entities.Pokemon", "PkmnPreEvolution")
-                        .WithOne("PreEvolution")
-                        .HasForeignKey("Poke.Core.ValueObjects.PreEvolution", "PkmnPreEvolutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PkmnPreEvolution");
-                });
-
             modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
                 {
                     b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
@@ -242,10 +184,6 @@ namespace Poke.Infra.Migrations
             modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
                 {
                     b.Navigation("BaseStats");
-
-                    b.Navigation("Evolutions");
-
-                    b.Navigation("PreEvolution");
 
                     b.Navigation("Traning");
                 });

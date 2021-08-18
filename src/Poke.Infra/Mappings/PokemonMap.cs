@@ -15,6 +15,8 @@ namespace Poke.Infra.Mappings
 
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.Number).IsUnique(true);
+
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasDefaultValueSql("gen_random_uuid()");

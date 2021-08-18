@@ -59,48 +59,6 @@ namespace Poke.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "evolution",
-                schema: "dbo",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    pkmn_evolution_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_evolution", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_evolution_pokemon_pkmn_evolution_id",
-                        column: x => x.pkmn_evolution_id,
-                        principalSchema: "dbo",
-                        principalTable: "pokemon",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "pre_evolution",
-                schema: "dbo",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    pkmn_pre_evolution_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_pre_evolution", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_pre_evolution_pokemon_pkmn_pre_evolution_id",
-                        column: x => x.pkmn_pre_evolution_id,
-                        principalSchema: "dbo",
-                        principalTable: "pokemon",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "traning",
                 schema: "dbo",
                 columns: table => new
@@ -134,16 +92,10 @@ namespace Poke.Infra.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_evolution_pkmn_evolution_id",
+                name: "IX_pokemon_number",
                 schema: "dbo",
-                table: "evolution",
-                column: "pkmn_evolution_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_pre_evolution_pkmn_pre_evolution_id",
-                schema: "dbo",
-                table: "pre_evolution",
-                column: "pkmn_pre_evolution_id",
+                table: "pokemon",
+                column: "number",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -158,14 +110,6 @@ namespace Poke.Infra.Migrations
         {
             migrationBuilder.DropTable(
                 name: "base_stats",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "evolution",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "pre_evolution",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
