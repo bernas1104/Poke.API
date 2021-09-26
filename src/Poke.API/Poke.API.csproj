@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Poke.Application\Poke.Application.csproj" />
     <ProjectReference Include="..\Poke.Core\Poke.Core.csproj" />
     <ProjectReference Include="..\Poke.Infra\Poke.Infra.csproj" />
+    <ProjectReference Include="..\Poke.Shared\Poke.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

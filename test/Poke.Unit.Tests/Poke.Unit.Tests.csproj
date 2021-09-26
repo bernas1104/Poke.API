@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Bogus" Version="33.0.2" />
     <PackageReference Include="FluentAssertions" Version="6.0.0" />
+    <PackageReference Include="Flunt" Version="2.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -29,6 +30,7 @@
     <ProjectReference Include="..\..\src\Poke.Application\Poke.Application.csproj" />
     <ProjectReference Include="..\..\src\Poke.Infra\Poke.Infra.csproj" />
     <ProjectReference Include="..\..\src\Poke.Core\Poke.Core.csproj" />
+    <ProjectReference Include="..\..\src\Poke.Shared\Poke.Shared.csproj" />
   </ItemGroup>
 
 </Project>

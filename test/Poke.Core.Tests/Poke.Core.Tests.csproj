@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoBogus" Version="2.13.1" />
     <PackageReference Include="Bogus" Version="33.0.2" />
+    <PackageReference Include="Flunt" Version="2.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -26,6 +27,7 @@
     <ProjectReference Include="..\..\src\Poke.Application\Poke.Application.csproj" />
     <ProjectReference Include="..\..\src\Poke.Infra\Poke.Infra.csproj" />
     <ProjectReference Include="..\..\src\Poke.Core\Poke.Core.csproj" />
+    <ProjectReference Include="..\..\src\Poke.Shared\Poke.Shared.csproj" />
   </ItemGroup>
 
 </Project>
