@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poke.Core.ValueObjects;
+using Poke.Core.Entities;
 
 namespace Poke.Infra.Mappings
 {
@@ -8,42 +8,28 @@ namespace Poke.Infra.Mappings
     {
         public void Configure(EntityTypeBuilder<Training> builder)
         {
-            builder.ToTable("traning", "dbo");
+            builder.ToTable("training", "dbo");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .HasColumnType("integer");
+                .HasColumnType("uuid");
 
             builder.Property(x => x.EVYeld)
                 .HasColumnName("ev_yeld")
-                .HasColumnType("integer")
-                .IsRequired(true);
-
-            builder.Property(x => x.CatchRate)
-                .HasColumnName("catch_rate")
-                .HasColumnType("decimal")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
             builder.Property(x => x.BaseFriendship)
                 .HasColumnName("base_friendship")
-                .HasColumnType("integer")
-                .IsRequired(true);
-
-            builder.Property(x => x.BaseExperience)
-                .HasColumnName("base_experience")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
             builder.Property(x => x.GrowthRate)
                 .HasColumnName("growth_rate")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.PokemonId)
-                .HasColumnName("pokemon_id")
-                .HasColumnType("uuid");
+            builder.Ignore(x => x.Notifications);
+            builder.Ignore(x => x.IsValid);
         }
     }
 }

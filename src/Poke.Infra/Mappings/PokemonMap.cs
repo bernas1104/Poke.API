@@ -15,11 +15,11 @@ namespace Poke.Infra.Mappings
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.Number).IsUnique(true);
+            builder.HasIndex(x => x.Number);
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .HasDefaultValueSql("gen_random_uuid()");
+                .HasColumnType("uuid");
 
             builder.Property(x => x.Number)
                 .HasColumnName("number")
@@ -28,52 +28,39 @@ namespace Poke.Infra.Mappings
 
             builder.Property(x => x.Name)
                 .HasColumnName("name")
-                .HasMaxLength(50)
-                .HasColumnType("varchar")
-                .IsRequired(true);
+                .HasColumnType("varchar");
 
             builder.Property(x => x.Species)
                 .HasColumnName("species")
-                .HasColumnType("varchar")
-                .HasMaxLength(50)
-                .IsRequired(true);
+                .HasColumnType("varchar");
 
             builder.Property(x => x.Height)
                 .HasColumnName("height")
-                .HasColumnType("decimal")
-                .IsRequired(true);
+                .HasColumnType("decimal");
 
             builder.Property(x => x.Weight)
                 .HasColumnName("weight")
-                .HasColumnType("decimal")
-                .IsRequired(true);
+                .HasColumnType("decimal");
 
             builder.Property(x => x.ImageUrl)
                 .HasColumnName("image_url")
-                .HasColumnType("text")
-                .IsRequired(true);
+                .HasColumnType("text");
 
             builder.Property(x => x.FirstType)
                 .HasColumnName("first_type")
-                .HasColumnType("varchar")
-                .HasMaxLength(10)
-                .IsRequired(true);
+                .HasColumnType("varchar");
 
             builder.Property(x => x.SecondType)
                 .HasColumnName("second_type")
                 .HasColumnType("varchar")
-                .HasMaxLength(10)
                 .IsRequired(false);
 
-            builder.HasOne(x => x.Traning)
-                .WithOne(x => x.Pokemon)
-                .HasForeignKey<Training>(x => x.PokemonId)
-                .IsRequired(true);
+            builder.HasOne<Training>(x => x.Training);
 
-            builder.HasOne(x => x.BaseStats)
-                .WithOne(x => x.Pokemon)
-                .HasForeignKey<BaseStats>(x => x.PokemonId)
-                .IsRequired(true);
+            builder.HasOne<BaseStats>(x => x.BaseStats);
+
+            builder.Ignore(x => x.Notifications);
+            builder.Ignore(x => x.IsValid);
         }
     }
 }

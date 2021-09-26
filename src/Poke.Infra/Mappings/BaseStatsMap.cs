@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poke.Core.ValueObjects;
+using Poke.Core.Entities;
 
 namespace Poke.Infra.Mappings
 {
@@ -14,41 +14,59 @@ namespace Poke.Infra.Mappings
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
+                .HasColumnType("uuid");
+
+            builder.OwnsOne(x => x.HitPoints)
+                .Property(x => x.Value)
+                .HasColumnName("hitpoints")
                 .HasColumnType("integer");
 
-            builder.Property(x => x.HitPoints)
-                .HasColumnName("hitpoints")
-                .HasColumnType("integer")
-                .IsRequired(true);
-
-            builder.Property(x => x.Attack)
+            builder.OwnsOne(x => x.Attack)
+                .Property(x => x.Value)
                 .HasColumnName("attack")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.Defense)
+            builder.OwnsOne(x => x.Defense)
+                .Property(x => x.Value)
                 .HasColumnName("defense")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.SpecialAttack)
+            builder.OwnsOne(x => x.SpecialAttack)
+                .Property(x => x.Value)
                 .HasColumnName("special_attack")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.SpecialDefense)
+            builder.OwnsOne(x => x.SpecialDefense)
+                .Property(x => x.Value)
                 .HasColumnName("special_defense")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.Speed)
+            builder.OwnsOne(x => x.Speed)
+                .Property(x => x.Value)
                 .HasColumnName("speed")
-                .HasColumnType("integer")
-                .IsRequired(true);
+                .HasColumnType("integer");
 
-            builder.Property(x => x.PokemonId)
-                .HasColumnName("pokemon_id")
-                .HasColumnType("uuid");
+            builder.Ignore(x => x.Notifications);
+            builder.Ignore(x => x.IsValid);
+            builder.Ignore(x => x.TotalPoints);
+
+            builder.OwnsOne(x => x.HitPoints).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.HitPoints).Ignore(x => x.IsValid);
+
+            builder.OwnsOne(x => x.Attack).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.Attack).Ignore(x => x.IsValid);
+
+            builder.OwnsOne(x => x.Defense).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.Defense).Ignore(x => x.IsValid);
+
+            builder.OwnsOne(x => x.SpecialAttack).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.SpecialAttack).Ignore(x => x.IsValid);
+
+            builder.OwnsOne(x => x.SpecialDefense).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.SpecialDefense).Ignore(x => x.IsValid);
+
+            builder.OwnsOne(x => x.Speed).Ignore(x => x.Notifications);
+            builder.OwnsOne(x => x.Speed).Ignore(x => x.IsValid);
         }
     }
 }
