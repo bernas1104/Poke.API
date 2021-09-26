@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Poke.Infra.Migrations
 {
@@ -16,15 +15,15 @@ namespace Poke.Infra.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     number = table.Column<int>(type: "integer", nullable: false),
-                    name = table.Column<string>(type: "varchar", maxLength: 50, nullable: false),
-                    species = table.Column<string>(type: "varchar", maxLength: 50, nullable: false),
+                    name = table.Column<string>(type: "varchar", nullable: true),
+                    species = table.Column<string>(type: "varchar", nullable: true),
                     height = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
                     weight = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
-                    image_url = table.Column<string>(type: "text", nullable: false),
-                    first_type = table.Column<string>(type: "varchar", maxLength: 10, nullable: false),
-                    second_type = table.Column<string>(type: "varchar", maxLength: 10, nullable: true)
+                    image_url = table.Column<string>(type: "text", nullable: true),
+                    first_type = table.Column<string>(type: "varchar", nullable: false),
+                    second_type = table.Column<string>(type: "varchar", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,22 +35,21 @@ namespace Poke.Infra.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    hitpoints = table.Column<int>(type: "integer", nullable: false),
-                    attack = table.Column<int>(type: "integer", nullable: false),
-                    defense = table.Column<int>(type: "integer", nullable: false),
-                    special_attack = table.Column<int>(type: "integer", nullable: false),
-                    special_defense = table.Column<int>(type: "integer", nullable: false),
-                    speed = table.Column<int>(type: "integer", nullable: false),
-                    pokemon_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    hitpoints = table.Column<int>(type: "integer", nullable: true),
+                    attack = table.Column<int>(type: "integer", nullable: true),
+                    defense = table.Column<int>(type: "integer", nullable: true),
+                    special_attack = table.Column<int>(type: "integer", nullable: true),
+                    special_defense = table.Column<int>(type: "integer", nullable: true),
+                    speed = table.Column<int>(type: "integer", nullable: true),
+                    PokemonId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_base_stats", x => x.id);
                     table.ForeignKey(
-                        name: "FK_base_stats_pokemon_pokemon_id",
-                        column: x => x.pokemon_id,
+                        name: "FK_base_stats_pokemon_PokemonId",
+                        column: x => x.PokemonId,
                         principalSchema: "dbo",
                         principalTable: "pokemon",
                         principalColumn: "id",
@@ -59,25 +57,22 @@ namespace Poke.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "traning",
+                name: "training",
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     ev_yeld = table.Column<int>(type: "integer", nullable: false),
-                    catch_rate = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
                     base_friendship = table.Column<int>(type: "integer", nullable: false),
-                    base_experience = table.Column<int>(type: "integer", nullable: false),
                     growth_rate = table.Column<int>(type: "integer", nullable: false),
-                    pokemon_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    PokemonId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_traning", x => x.id);
+                    table.PrimaryKey("PK_training", x => x.id);
                     table.ForeignKey(
-                        name: "FK_traning_pokemon_pokemon_id",
-                        column: x => x.pokemon_id,
+                        name: "FK_training_pokemon_PokemonId",
+                        column: x => x.PokemonId,
                         principalSchema: "dbo",
                         principalTable: "pokemon",
                         principalColumn: "id",
@@ -85,24 +80,23 @@ namespace Poke.Infra.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_base_stats_pokemon_id",
+                name: "IX_base_stats_PokemonId",
                 schema: "dbo",
                 table: "base_stats",
-                column: "pokemon_id",
+                column: "PokemonId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_pokemon_number",
                 schema: "dbo",
                 table: "pokemon",
-                column: "number",
-                unique: true);
+                column: "number");
 
             migrationBuilder.CreateIndex(
-                name: "IX_traning_pokemon_id",
+                name: "IX_training_PokemonId",
                 schema: "dbo",
-                table: "traning",
-                column: "pokemon_id",
+                table: "training",
+                column: "PokemonId",
                 unique: true);
         }
 
@@ -113,7 +107,7 @@ namespace Poke.Infra.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "traning",
+                name: "training",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
