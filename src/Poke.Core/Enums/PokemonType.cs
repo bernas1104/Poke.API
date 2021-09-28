@@ -4,6 +4,8 @@ namespace Poke.Core.Enums
 {
     public enum PokemonType
     {
+        [Description("Undefined")]
+        Undefined,
         [Description("Grass")]
         Grass,
         [Description("Water")]

@@ -14,9 +14,9 @@ namespace Poke.Core.Entities
         public double Weight { get; private set; }
         public string ImageUrl { get; private set; }
         public PokemonType FirstType { get; private set; }
-        public PokemonType? SecondType { get; private set; }
-        public Training Training { get; private set; }
-        public BaseStats BaseStats { get; private set; }
+        public PokemonType SecondType { get; private set; }
+        // public Training Training { get; private set; }
+        // public BaseStats BaseStats { get; private set; }
 
         private Pokemon()
         {}
@@ -24,8 +24,8 @@ namespace Poke.Core.Entities
         public Pokemon(
             int number, string name, string species, double height,
             double weight, string imageUrl, PokemonType firstType,
-            Training training, BaseStats baseStats,
-            PokemonType? secondType = null
+            // Training training, BaseStats baseStats,
+            PokemonType secondType = PokemonType.Undefined
         ) : base()
         {
             Number = number;
@@ -36,8 +36,8 @@ namespace Poke.Core.Entities
             ImageUrl = imageUrl;
             FirstType = firstType;
             SecondType = secondType;
-            Training = training;
-            BaseStats = baseStats;
+            // Training = training;
+            // BaseStats = baseStats;
 
             Validate();
         }
@@ -45,8 +45,8 @@ namespace Poke.Core.Entities
         public Pokemon(
             Guid id, int number, string name, string species, double height,
             double weight, string imageUrl, PokemonType firstType,
-            Training training, BaseStats baseStats,
-            PokemonType? secondType = null
+            // Training training, BaseStats baseStats,
+            PokemonType secondType = PokemonType.Undefined
         ) : base(id)
         {
             Number = number;
@@ -57,8 +57,50 @@ namespace Poke.Core.Entities
             ImageUrl = imageUrl;
             FirstType = firstType;
             SecondType = secondType;
-            Training = training;
-            BaseStats = baseStats;
+            // Training = training;
+            // BaseStats = baseStats;
+
+            Validate();
+        }
+
+        public Pokemon(
+            int number, string name, string species, double height,
+            double weight, string image_url, int first_type,
+            // Training training, BaseStats baseStats,
+            int second_type = (int)PokemonType.Undefined
+        ) : base()
+        {
+            Number = number;
+            Name = name;
+            Species = species;
+            Height = height;
+            Weight = weight;
+            ImageUrl = image_url;
+            FirstType = (PokemonType)first_type;
+            SecondType = (PokemonType)second_type;
+            // Training = training;
+            // BaseStats = baseStats;
+
+            Validate();
+        }
+
+        public Pokemon(
+            Guid id, int number, string name, string species, double height,
+            double weight, string image_url, int first_type,
+            // Training training, BaseStats baseStats,
+            int second_type = (int)PokemonType.Undefined
+        ) : base(id)
+        {
+            Number = number;
+            Name = name;
+            Species = species;
+            Height = height;
+            Weight = weight;
+            ImageUrl = image_url;
+            FirstType = (PokemonType)first_type;
+            SecondType = (PokemonType)second_type;
+            // Training = training;
+            // BaseStats = baseStats;
 
             Validate();
         }
@@ -66,8 +108,8 @@ namespace Poke.Core.Entities
         protected override void Validate()
         {
             AddNotifications(
-                Training,
-                BaseStats,
+                // Training,
+                // BaseStats,
                 new Contract<Pokemon>()
                     .Requires()
                     .IsGreaterOrEqualsThan(
@@ -103,30 +145,26 @@ namespace Poke.Core.Entities
                         "Pokemon image URL should not be null or empty."
                     )
                     .IsGreaterOrEqualsThan(
-                        (int)FirstType, 0, "Pokemon first type",
+                        (int)FirstType, 1, "Pokemon first type",
+                        "Pokemon first type should be greater than one (1)."
+                    )
+                    .IsLowerOrEqualsThan(
+                        (int)FirstType, 15, "Pokemon first type",
+                        "Pokemon first type should be lower than sixteen (16)."
+                    )
+                    .IsGreaterOrEqualsThan(
+                        (int)SecondType, 0, "Pokemon first type",
                         "Pokemon first type should be greater than zero (0)."
                     )
                     .IsLowerOrEqualsThan(
-                        (int)FirstType, 14, "Pokemon first type",
-                        "Pokemon first type should be lower than fourteen (14)."
+                        (int)SecondType, 15, "Pokemon first type",
+                        "Pokemon first type should be lower than sixteen (16)."
+                    )
+                    .AreNotEquals(
+                        (int)FirstType, (int)SecondType, "Pokemon types",
+                        "Pokemon second type must be different than first type."
                     )
             );
-
-            if (SecondType is not null)
-            {
-                AddNotifications(
-                    new Contract<Pokemon>()
-                        .Requires()
-                        .IsGreaterOrEqualsThan(
-                            (int)SecondType, 0, "Pokemon first type",
-                            "Pokemon first type should be greater than zero (0)."
-                        )
-                        .IsLowerOrEqualsThan(
-                            (int)SecondType, 14, "Pokemon first type",
-                            "Pokemon first type should be lower than fourteen (14)."
-                        )
-                );
-            }
         }
     }
 }

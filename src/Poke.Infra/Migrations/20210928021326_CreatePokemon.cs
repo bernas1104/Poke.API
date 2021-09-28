@@ -21,9 +21,9 @@ namespace Poke.Infra.Migrations
                     species = table.Column<string>(type: "varchar", nullable: true),
                     height = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
                     weight = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
-                    image_url = table.Column<string>(type: "text", nullable: true),
-                    first_type = table.Column<string>(type: "varchar", nullable: false),
-                    second_type = table.Column<string>(type: "varchar", nullable: true)
+                    imageUrl = table.Column<string>(type: "varchar", nullable: true),
+                    firstType = table.Column<int>(type: "integer", nullable: false),
+                    secondType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,8 +83,7 @@ namespace Poke.Infra.Migrations
                 name: "IX_base_stats_PokemonId",
                 schema: "dbo",
                 table: "base_stats",
-                column: "PokemonId",
-                unique: true);
+                column: "PokemonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_pokemon_number",
@@ -96,8 +95,7 @@ namespace Poke.Infra.Migrations
                 name: "IX_training_PokemonId",
                 schema: "dbo",
                 table: "training",
-                column: "PokemonId",
-                unique: true);
+                column: "PokemonId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

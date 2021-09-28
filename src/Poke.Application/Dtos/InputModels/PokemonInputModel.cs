@@ -11,7 +11,7 @@ namespace Poke.Application.Dtos.InputModels
         public double Weight { get; init; }
         public string ImageUrl { get; init; }
         public PokemonType FirstType { get; init; }
-        public PokemonType? SecondType { get; init; }
+        public PokemonType SecondType { get; init; }
         public TrainingInputModel Training { get; init; }
         public BaseStatsInputModel BaseStats { get; init; }
     }

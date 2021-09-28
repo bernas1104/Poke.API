@@ -10,7 +10,7 @@ using Poke.Infra.Context;
 namespace Poke.Infra.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    [Migration("20210926202950_CreatePokemon")]
+    [Migration("20210928021326_CreatePokemon")]
     partial class CreatePokemon
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,7 @@ namespace Poke.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PokemonId")
-                        .IsUnique();
+                    b.HasIndex("PokemonId");
 
                     b.ToTable("base_stats", "dbo");
                 });
@@ -46,18 +45,17 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("FirstType")
-                        .IsRequired()
-                        .HasColumnType("varchar")
-                        .HasColumnName("first_type");
+                    b.Property<int>("FirstType")
+                        .HasColumnType("integer")
+                        .HasColumnName("firstType");
 
                     b.Property<decimal>("Height")
                         .HasColumnType("numeric(38,17)")
                         .HasColumnName("height");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("image_url");
+                        .HasColumnType("varchar")
+                        .HasColumnName("imageUrl");
 
                     b.Property<string>("Name")
                         .HasColumnType("varchar")
@@ -67,9 +65,9 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("number");
 
-                    b.Property<string>("SecondType")
-                        .HasColumnType("varchar")
-                        .HasColumnName("second_type");
+                    b.Property<int>("SecondType")
+                        .HasColumnType("integer")
+                        .HasColumnName("secondType");
 
                     b.Property<string>("Species")
                         .HasColumnType("varchar")
@@ -110,8 +108,7 @@ namespace Poke.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PokemonId")
-                        .IsUnique();
+                    b.HasIndex("PokemonId");
 
                     b.ToTable("training", "dbo");
                 });
@@ -119,8 +116,8 @@ namespace Poke.Infra.Migrations
             modelBuilder.Entity("Poke.Core.Entities.BaseStats", b =>
                 {
                     b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
-                        .WithOne("BaseStats")
-                        .HasForeignKey("Poke.Core.Entities.BaseStats", "PokemonId")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -244,19 +241,12 @@ namespace Poke.Infra.Migrations
             modelBuilder.Entity("Poke.Core.Entities.Training", b =>
                 {
                     b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
-                        .WithOne("Training")
-                        .HasForeignKey("Poke.Core.Entities.Training", "PokemonId")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Pokemon");
-                });
-
-            modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
-                {
-                    b.Navigation("BaseStats");
-
-                    b.Navigation("Training");
                 });
 #pragma warning restore 612, 618
         }

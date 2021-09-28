@@ -1,9 +1,11 @@
+using System;
 using Poke.Core.Enums;
 
 namespace Poke.Application.Dtos.ViewModels
 {
     public record PokemonViewModel
     {
+        public Guid Id { get; init; }
         public int Number { get; init; }
         public string Name { get; init; }
         public string Species { get; init; }

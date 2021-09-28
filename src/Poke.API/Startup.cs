@@ -13,11 +13,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
+using Poke.Application.Mappings;
 using Poke.Application.Services;
 using Poke.Application.Services.Interfaces;
 using Poke.Core.Interfaces.Repositories;
+using Poke.Core.Interfaces.UoW;
 using Poke.Infra.Context;
 using Poke.Infra.Repositories;
+using Poke.Infra.UoW;
 
 namespace Poke.API
 {
@@ -39,7 +42,7 @@ namespace Poke.API
         {
             services.AddControllers();
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(MappingProfiles));
 
             var healthCheck = services.AddHealthChecksUI(
                 setupSettings: setup =>
@@ -86,6 +89,8 @@ namespace Poke.API
             services.AddScoped<IPokemonsService, PokemonsService>();
 
             services.AddScoped<IPokemonsRepository, PokemonsRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

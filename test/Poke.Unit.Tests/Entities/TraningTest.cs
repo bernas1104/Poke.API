@@ -54,7 +54,7 @@ namespace Poke.Unit.Tests.Entities
             var faker = new Faker();
 
             var training = new Training(
-                faker.Random.Int(0, 3), faker.Random.Int(50, 140),
+                faker.Random.Int(1, 3), faker.Random.Int(50, 140),
                 (GrowthRate)faker.Random.Int(0, 5)
             );
 
@@ -70,7 +70,7 @@ namespace Poke.Unit.Tests.Entities
             var faker = new Faker();
 
             var training = new Training(
-                Guid.NewGuid(), faker.Random.Int(0, 3), faker.Random.Int(50, 140),
+                Guid.NewGuid(), faker.Random.Int(1, 3), faker.Random.Int(50, 140),
                 (GrowthRate)faker.Random.Int(0, 5), Guid.NewGuid()
             );
 

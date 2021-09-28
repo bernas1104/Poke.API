@@ -43,21 +43,24 @@ namespace Poke.Infra.Mappings
                 .HasColumnType("decimal");
 
             builder.Property(x => x.ImageUrl)
-                .HasColumnName("image_url")
-                .HasColumnType("text");
-
-            builder.Property(x => x.FirstType)
-                .HasColumnName("first_type")
+                .HasColumnName("imageUrl")
                 .HasColumnType("varchar");
 
+            builder.Property(x => x.FirstType)
+                .HasColumnName("firstType")
+                .HasColumnType("integer");
+
             builder.Property(x => x.SecondType)
-                .HasColumnName("second_type")
-                .HasColumnType("varchar")
-                .IsRequired(false);
+                .HasColumnName("secondType")
+                .HasColumnType("integer");
 
-            builder.HasOne<Training>(x => x.Training);
+            // builder.HasOne<Training>(x => x.Training)
+            //     .WithOne(x => x.Pokemon)
+            //     .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne<BaseStats>(x => x.BaseStats);
+            // builder.HasOne<BaseStats>(x => x.BaseStats)
+            //     .WithOne(x => x.Pokemon)
+            //     .OnDelete(DeleteBehavior.Cascade);
 
             builder.Ignore(x => x.Notifications);
             builder.Ignore(x => x.IsValid);
