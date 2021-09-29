@@ -60,6 +60,12 @@ namespace Poke.Application.Services
                 trainingData.GrowthRate
             );
 
+            if (!training.IsValid)
+            {
+                // TODO DomainNotification
+                return null;
+            }
+
             var baseStatsData = pokemon.BaseStats;
 
             var baseStats = new BaseStats(
@@ -68,15 +74,20 @@ namespace Poke.Application.Services
                 new Point(baseStatsData.SpecialDefense), new Point(baseStatsData.Speed)
             );
 
-            // var newPokemon = new Pokemon(
-            //     pokemon.Number, pokemon.Name, pokemon.Species, pokemon.Height,
-            //     pokemon.Weight, pokemon.ImageUrl, pokemon.FirstType, training,
-            //     baseStats, pokemon.SecondType
-            // );
+            if (!baseStats.IsValid)
+            {
+                // TODO DomainNotification
+                return null;
+            }
+
             var newPokemon = new Pokemon(
                 pokemon.Number, pokemon.Name, pokemon.Species, pokemon.Height,
                 pokemon.Weight, pokemon.ImageUrl, pokemon.FirstType, pokemon.SecondType
             );
+
+            newPokemon.AddBaseStatsInformation(baseStats);
+
+            newPokemon.AddTrainingInformation(training);
 
             if (!newPokemon.IsValid)
             {

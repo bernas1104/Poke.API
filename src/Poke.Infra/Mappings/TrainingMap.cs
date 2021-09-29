@@ -28,6 +28,10 @@ namespace Poke.Infra.Mappings
                 .HasColumnName("growth_rate")
                 .HasColumnType("integer");
 
+            builder.Property(x => x.PokemonId)
+                .HasColumnName("pokemon_id")
+                .HasColumnType("uuid");
+
             builder.Ignore(x => x.Notifications);
             builder.Ignore(x => x.IsValid);
         }

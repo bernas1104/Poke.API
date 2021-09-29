@@ -55,6 +55,7 @@ namespace Poke.Core.Entities
             Validate();
         }
 
+
         protected override void Validate()
         {
             AddNotifications(

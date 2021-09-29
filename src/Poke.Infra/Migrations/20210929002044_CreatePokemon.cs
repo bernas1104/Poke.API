@@ -21,9 +21,9 @@ namespace Poke.Infra.Migrations
                     species = table.Column<string>(type: "varchar", nullable: true),
                     height = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
                     weight = table.Column<decimal>(type: "numeric(38,17)", nullable: false),
-                    imageUrl = table.Column<string>(type: "varchar", nullable: true),
-                    firstType = table.Column<int>(type: "integer", nullable: false),
-                    secondType = table.Column<int>(type: "integer", nullable: false)
+                    image_url = table.Column<string>(type: "varchar", nullable: true),
+                    first_type = table.Column<int>(type: "integer", nullable: false),
+                    second_type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,14 +42,14 @@ namespace Poke.Infra.Migrations
                     special_attack = table.Column<int>(type: "integer", nullable: true),
                     special_defense = table.Column<int>(type: "integer", nullable: true),
                     speed = table.Column<int>(type: "integer", nullable: true),
-                    PokemonId = table.Column<Guid>(type: "uuid", nullable: false)
+                    pokemon_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_base_stats", x => x.id);
                     table.ForeignKey(
-                        name: "FK_base_stats_pokemon_PokemonId",
-                        column: x => x.PokemonId,
+                        name: "FK_base_stats_pokemon_pokemon_id",
+                        column: x => x.pokemon_id,
                         principalSchema: "dbo",
                         principalTable: "pokemon",
                         principalColumn: "id",
@@ -65,14 +65,14 @@ namespace Poke.Infra.Migrations
                     ev_yeld = table.Column<int>(type: "integer", nullable: false),
                     base_friendship = table.Column<int>(type: "integer", nullable: false),
                     growth_rate = table.Column<int>(type: "integer", nullable: false),
-                    PokemonId = table.Column<Guid>(type: "uuid", nullable: false)
+                    pokemon_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_training", x => x.id);
                     table.ForeignKey(
-                        name: "FK_training_pokemon_PokemonId",
-                        column: x => x.PokemonId,
+                        name: "FK_training_pokemon_pokemon_id",
+                        column: x => x.pokemon_id,
                         principalSchema: "dbo",
                         principalTable: "pokemon",
                         principalColumn: "id",
@@ -80,10 +80,11 @@ namespace Poke.Infra.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_base_stats_PokemonId",
+                name: "IX_base_stats_pokemon_id",
                 schema: "dbo",
                 table: "base_stats",
-                column: "PokemonId");
+                column: "pokemon_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_pokemon_number",
@@ -92,10 +93,11 @@ namespace Poke.Infra.Migrations
                 column: "number");
 
             migrationBuilder.CreateIndex(
-                name: "IX_training_PokemonId",
+                name: "IX_training_pokemon_id",
                 schema: "dbo",
                 table: "training",
-                column: "PokemonId");
+                column: "pokemon_id",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

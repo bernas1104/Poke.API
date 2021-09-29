@@ -15,59 +15,16 @@ namespace Poke.Core.Entities
         public string ImageUrl { get; private set; }
         public PokemonType FirstType { get; private set; }
         public PokemonType SecondType { get; private set; }
-        // public Training Training { get; private set; }
-        // public BaseStats BaseStats { get; private set; }
+        public Training Training { get; private set; }
+        public BaseStats BaseStats { get; private set; }
 
         private Pokemon()
         {}
 
         public Pokemon(
             int number, string name, string species, double height,
-            double weight, string imageUrl, PokemonType firstType,
-            // Training training, BaseStats baseStats,
-            PokemonType secondType = PokemonType.Undefined
-        ) : base()
-        {
-            Number = number;
-            Name = name;
-            Species = species;
-            Height = height;
-            Weight = weight;
-            ImageUrl = imageUrl;
-            FirstType = firstType;
-            SecondType = secondType;
-            // Training = training;
-            // BaseStats = baseStats;
-
-            Validate();
-        }
-
-        public Pokemon(
-            Guid id, int number, string name, string species, double height,
-            double weight, string imageUrl, PokemonType firstType,
-            // Training training, BaseStats baseStats,
-            PokemonType secondType = PokemonType.Undefined
-        ) : base(id)
-        {
-            Number = number;
-            Name = name;
-            Species = species;
-            Height = height;
-            Weight = weight;
-            ImageUrl = imageUrl;
-            FirstType = firstType;
-            SecondType = secondType;
-            // Training = training;
-            // BaseStats = baseStats;
-
-            Validate();
-        }
-
-        public Pokemon(
-            int number, string name, string species, double height,
-            double weight, string image_url, int first_type,
-            // Training training, BaseStats baseStats,
-            int second_type = (int)PokemonType.Undefined
+            double weight, string image_url, PokemonType first_type,
+            PokemonType second_type
         ) : base()
         {
             Number = number;
@@ -76,19 +33,16 @@ namespace Poke.Core.Entities
             Height = height;
             Weight = weight;
             ImageUrl = image_url;
-            FirstType = (PokemonType)first_type;
-            SecondType = (PokemonType)second_type;
-            // Training = training;
-            // BaseStats = baseStats;
+            FirstType = first_type;
+            SecondType = second_type;
 
             Validate();
         }
 
         public Pokemon(
-            Guid id, int number, string name, string species, double height,
-            double weight, string image_url, int first_type,
-            // Training training, BaseStats baseStats,
-            int second_type = (int)PokemonType.Undefined
+            Guid id, int number, string name, string species,
+            double height, double weight, string image_url,
+            PokemonType first_type, PokemonType second_type
         ) : base(id)
         {
             Number = number;
@@ -97,10 +51,8 @@ namespace Poke.Core.Entities
             Height = height;
             Weight = weight;
             ImageUrl = image_url;
-            FirstType = (PokemonType)first_type;
-            SecondType = (PokemonType)second_type;
-            // Training = training;
-            // BaseStats = baseStats;
+            FirstType = first_type;
+            SecondType = second_type;
 
             Validate();
         }
@@ -108,8 +60,6 @@ namespace Poke.Core.Entities
         protected override void Validate()
         {
             AddNotifications(
-                // Training,
-                // BaseStats,
                 new Contract<Pokemon>()
                     .Requires()
                     .IsGreaterOrEqualsThan(
@@ -118,7 +68,7 @@ namespace Poke.Core.Entities
                     )
                     .IsLowerOrEqualsThan(
                         Number, 151, "Pokemon number",
-                        "Pokemon number should be greater than one hundred fifty one (151)."
+                        "Pokemon number should be lower than one hundred fifty two (152)."
                     )
                     .IsNotNullOrEmpty(
                         Name, "Pokemon name",
@@ -165,6 +115,16 @@ namespace Poke.Core.Entities
                         "Pokemon second type must be different than first type."
                     )
             );
+        }
+
+        public void AddTrainingInformation(Training training)
+        {
+            Training = training;
+        }
+
+        public void AddBaseStatsInformation(BaseStats baseStats)
+        {
+            BaseStats = baseStats;
         }
     }
 }
