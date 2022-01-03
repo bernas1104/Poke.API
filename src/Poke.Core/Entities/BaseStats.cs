@@ -1,7 +1,5 @@
 using System;
-using Flunt.Validations;
 using Poke.Core.ValueObjects;
-using Poke.Shared.Entities;
 
 namespace Poke.Core.Entities
 {
@@ -34,8 +32,6 @@ namespace Poke.Core.Entities
             SpecialAttack = specialAttack;
             SpecialDefense = specialDefense;
             Speed = speed;
-
-            Validate();
         }
 
         public BaseStats(
@@ -51,31 +47,12 @@ namespace Poke.Core.Entities
             SpecialDefense = specialDefense;
             Speed = speed;
             PokemonId = pokemonId;
-
-            Validate();
         }
 
 
-        protected override void Validate()
+        public override bool IsValid()
         {
-            AddNotifications(
-                HitPoints,
-                Attack,
-                Defense,
-                SpecialAttack,
-                SpecialDefense,
-                Speed,
-                new Contract<BaseStats>()
-                    .Requires()
-                    .IsGreaterOrEqualsThan(
-                        TotalPoints, 175, "Total Points",
-                        "Base Stats sum must be at least one hundred seventy five (175)."
-                    )
-                    .IsLowerOrEqualsThan(
-                        TotalPoints, 590, "Total Points",
-                        "Base Stats sum must be at most five hundred ninety (590)."
-                    )
-            );
+            return false;
         }
     }
 }

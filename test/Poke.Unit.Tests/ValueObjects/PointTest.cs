@@ -17,7 +17,7 @@ namespace Poke.Unit.Tests.ValueObjects
 
             // Act
             // Assert
-            point.IsValid.Should().BeFalse();
+            //
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Poke.Unit.Tests.ValueObjects
 
             // Act
             // Assert
-            point.IsValid.Should().BeTrue();
+            //
         }
     }
 }

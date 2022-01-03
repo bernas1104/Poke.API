@@ -50,27 +50,7 @@ namespace Poke.Infra.Mappings
                 .HasColumnName("pokemon_id")
                 .HasColumnType("uuid");
 
-            builder.Ignore(x => x.Notifications);
-            builder.Ignore(x => x.IsValid);
             builder.Ignore(x => x.TotalPoints);
-
-            builder.OwnsOne(x => x.HitPoints).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.HitPoints).Ignore(x => x.IsValid);
-
-            builder.OwnsOne(x => x.Attack).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.Attack).Ignore(x => x.IsValid);
-
-            builder.OwnsOne(x => x.Defense).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.Defense).Ignore(x => x.IsValid);
-
-            builder.OwnsOne(x => x.SpecialAttack).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.SpecialAttack).Ignore(x => x.IsValid);
-
-            builder.OwnsOne(x => x.SpecialDefense).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.SpecialDefense).Ignore(x => x.IsValid);
-
-            builder.OwnsOne(x => x.Speed).Ignore(x => x.Notifications);
-            builder.OwnsOne(x => x.Speed).Ignore(x => x.IsValid);
         }
     }
 }
