@@ -1,7 +1,5 @@
 using System;
-using Flunt.Validations;
 using Poke.Core.Enums;
-using Poke.Shared.Entities;
 
 namespace Poke.Core.Entities
 {
@@ -35,8 +33,6 @@ namespace Poke.Core.Entities
             ImageUrl = image_url;
             FirstType = first_type;
             SecondType = second_type;
-
-            Validate();
         }
 
         public Pokemon(
@@ -53,68 +49,11 @@ namespace Poke.Core.Entities
             ImageUrl = image_url;
             FirstType = first_type;
             SecondType = second_type;
-
-            Validate();
         }
 
-        protected override void Validate()
+        public override bool IsValid()
         {
-            AddNotifications(
-                new Contract<Pokemon>()
-                    .Requires()
-                    .IsGreaterOrEqualsThan(
-                        Number, 1, "Pokemon number",
-                        "Pokemon number should be greater than one (1)."
-                    )
-                    .IsLowerOrEqualsThan(
-                        Number, 151, "Pokemon number",
-                        "Pokemon number should be lower than one hundred fifty two (152)."
-                    )
-                    .IsNotNullOrEmpty(
-                        Name, "Pokemon name",
-                        "Pokemon name should not be null or empty."
-                    )
-                    .IsNotNullOrEmpty(
-                        Species, "Pokemon species",
-                        "Pokemon species should not be null or empty."
-                    )
-                    .IsGreaterThan(
-                        Height, 0d, "Pokemon height",
-                        "Pokemon height should be greater than zero (0)."
-                    )
-                    .IsGreaterThan(
-                        Weight, 0d, "Pokemon weight",
-                        "Pokemon weight should be greater than zero (0)."
-                    )
-                    .IsUrl(
-                        ImageUrl, "Pokemon image URL",
-                        "Pokemon image should be a valid URL."
-                    )
-                    .IsNotNullOrEmpty(
-                        ImageUrl, "Pokemon image URL",
-                        "Pokemon image URL should not be null or empty."
-                    )
-                    .IsGreaterOrEqualsThan(
-                        (int)FirstType, 1, "Pokemon first type",
-                        "Pokemon first type should be greater than one (1)."
-                    )
-                    .IsLowerOrEqualsThan(
-                        (int)FirstType, 15, "Pokemon first type",
-                        "Pokemon first type should be lower than sixteen (16)."
-                    )
-                    .IsGreaterOrEqualsThan(
-                        (int)SecondType, 0, "Pokemon first type",
-                        "Pokemon first type should be greater than zero (0)."
-                    )
-                    .IsLowerOrEqualsThan(
-                        (int)SecondType, 15, "Pokemon first type",
-                        "Pokemon first type should be lower than sixteen (16)."
-                    )
-                    .AreNotEquals(
-                        (int)FirstType, (int)SecondType, "Pokemon types",
-                        "Pokemon second type must be different than first type."
-                    )
-            );
+            return false;
         }
 
         public void AddTrainingInformation(Training training)

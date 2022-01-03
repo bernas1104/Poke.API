@@ -1,9 +1,6 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Poke.Core.Entities;
-using Poke.Core.ValueObjects;
 
 namespace Poke.Infra.Mappings
 {
@@ -61,9 +58,6 @@ namespace Poke.Infra.Mappings
             builder.HasOne<BaseStats>(x => x.BaseStats)
                 .WithOne(x => x.Pokemon)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Ignore(x => x.Notifications);
-            builder.Ignore(x => x.IsValid);
         }
     }
 }

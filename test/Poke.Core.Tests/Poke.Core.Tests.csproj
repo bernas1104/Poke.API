@@ -24,10 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Poke.API\Poke.API.csproj" />
-    <ProjectReference Include="..\..\src\Poke.Application\Poke.Application.csproj" />
     <ProjectReference Include="..\..\src\Poke.Infra\Poke.Infra.csproj" />
     <ProjectReference Include="..\..\src\Poke.Core\Poke.Core.csproj" />
-    <ProjectReference Include="..\..\src\Poke.Shared\Poke.Shared.csproj" />
   </ItemGroup>
 
 </Project>

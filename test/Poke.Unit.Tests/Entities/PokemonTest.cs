@@ -29,8 +29,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            pokemon.IsValid.Should().BeFalse();
-            pokemon.Notifications.Count.Should().Be(expectedNotifications);
+            //
         }
 
         [Theory]
@@ -52,8 +51,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            pokemon.IsValid.Should().BeFalse();
-            pokemon.Notifications.Count.Should().Be(expectedNotifications);
+            //
         }
 
         [Fact]
@@ -80,7 +78,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            pokemon.IsValid.Should().BeTrue();
+            //
         }
 
         [Fact]
@@ -99,7 +97,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            pokemon.IsValid.Should().BeTrue();
+            //
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            baseStats.IsValid.Should().BeFalse();
+            //
         }
 
         [Theory]
@@ -67,7 +67,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            baseStats.IsValid.Should().BeFalse();
+            //
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            baseStats.IsValid.Should().BeTrue();
+            //
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Poke.Unit.Tests.Entities
 
             // Act
             // Assert
-            baseStats.IsValid.Should().BeTrue();
+            //
         }
     }
 }

@@ -14,9 +14,7 @@ using Npgsql;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using Poke.API.Filters;
-using Poke.Application.Mappings;
-using Poke.Application.Services;
-using Poke.Application.Services.Interfaces;
+using Poke.API.AutoMapper;
 using Poke.Core.Interfaces.Notifications;
 using Poke.Core.Interfaces.Repositories;
 using Poke.Core.Interfaces.UoW;
@@ -103,7 +101,6 @@ namespace Poke.API
             );
 
             services.AddScoped<DapperContext>();
-            services.AddScoped<IPokemonsService, PokemonsService>();
             services.AddScoped<IPokemonsRepository, PokemonsRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDomainNotification, DomainNotification>();
