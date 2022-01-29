@@ -1,9 +1,8 @@
 using Bogus;
-using FluentAssertions;
-using Poke.Core.ValueObjects;
+using Poke.Core.Models;
 using Xunit;
 
-namespace Poke.Unit.Tests.ValueObjects
+namespace Poke.Unit.Tests.Core.Models
 {
     public class PointTest
     {

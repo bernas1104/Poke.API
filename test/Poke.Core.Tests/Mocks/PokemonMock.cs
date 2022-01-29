@@ -1,9 +1,9 @@
 using System;
 using AutoBogus;
 using Bogus;
+using Poke.Core.Commands.Requests;
 using Poke.Core.Entities;
 using Poke.Core.Enums;
-using Poke.Core.ValueObjects;
 
 namespace Poke.Core.Tests.Mocks
 {
@@ -20,8 +20,9 @@ namespace Poke.Core.Tests.Mocks
 
                         return new Pokemon(
                             pkmnGuid, f.Random.Int(1, 151), f.Person.FirstName,
-                            f.Random.Word(), f.Random.Double(1, 10), f.Random.Double(1, 500),
-                            f.Internet.Url(), (PokemonType)f.Random.Int(1, 8),
+                            f.Random.Word(), f.Random.Double(1, 10),
+                            f.Random.Double(1, 500), f.Internet.Url(),
+                            (PokemonType)f.Random.Int(1, 8),
                             undefined ?
                                 PokemonType.Undefined :
                                 (PokemonType)f.Random.Int(9, 15)
@@ -29,40 +30,20 @@ namespace Poke.Core.Tests.Mocks
                     }
                 );
 
-        public static Faker<Training> TrainingFaker(Guid pokemonId) =>
-            new AutoFaker<Training>()
-                .CustomInstantiator(
-                    f =>
-                    {
-                        return new Training(
-                            Guid.NewGuid(), f.Random.Int(1, 3), f.Random.Int(50, 140),
-                            (GrowthRate)f.Random.Int(0, 5), pokemonId
-                        );
-                    }
-                );
-
-        public static Faker<BaseStats> BaseStatsFaker(Guid pokemonId) =>
-            new AutoFaker<BaseStats>()
-                .CustomInstantiator(
-                    f =>
-                    {
-                        var hitPoints = new Point(f.Random.Int(1, 250));
-
-                        var attack = new Point(f.Random.Int(1, 250));
-
-                        var defense = new Point(f.Random.Int(1, 250));
-
-                        var specialAttack = new Point(f.Random.Int(1, 250));
-
-                        var specialDefense = new Point(f.Random.Int(1, 250));
-
-                        var speed = new Point(f.Random.Int(1, 250));
-
-                        return new BaseStats(
-                            Guid.NewGuid(), hitPoints, attack, defense,
-                            specialAttack, specialDefense, speed, pokemonId
-                        );
-                    }
+        public static Faker<CreatePokemonRequest> CreatePokemonRequestFaker =>
+            new Faker<CreatePokemonRequest>()
+                .RuleFor(x => x.Number, f => f.Random.Int(1, 151))
+                .RuleFor(x => x.Name, f => f.Random.Word())
+                .RuleFor(x => x.Species, f => f.Random.Word())
+                .RuleFor(x => x.Height, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.Weight, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.ImageUrl, f => f.Internet.Url())
+                .RuleFor(x => x.FirstType, f => f.Random.Int(1, 15))
+                .RuleFor(x => x.SecondType, f => f.Random.Int(0, 15))
+                .RuleFor(x => x.BaseStats, BaseStatsMock.CreateBaseStatsFaker)
+                .RuleFor(
+                    x => x.Training,
+                    TrainingMock.CreateTrainingRequestFaker
                 );
     }
 }
