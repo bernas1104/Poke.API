@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poke.Core.Entities;
+using Poke.Core.ValueObjects;
 
 namespace Poke.Infra.Mappings
 {

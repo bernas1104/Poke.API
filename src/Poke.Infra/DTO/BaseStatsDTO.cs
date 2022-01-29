@@ -1,8 +1,8 @@
 using System;
 
-namespace Poke.Infra.DAO
+namespace Poke.Infra.DTO
 {
-    public record BaseStatsDAO
+    public record BaseStatsDTO
     {
         public Guid Id { get; init; }
         public int HitPoints { get; init; }

@@ -22,6 +22,7 @@ using Poke.Core.Notifications;
 using Poke.Infra.Context;
 using Poke.Infra.Repositories;
 using Poke.Infra.UoW;
+using MediatR;
 
 namespace Poke.API
 {
@@ -59,6 +60,7 @@ namespace Poke.API
                 options => options.JsonSerializerOptions.IgnoreNullValues = true
             );
             services.AddAutoMapper(typeof(MappingProfiles));
+            services.AddMediatR(typeof(Startup));
 
             var healthCheck = services.AddHealthChecksUI(
                 setupSettings: setup =>
@@ -101,7 +103,7 @@ namespace Poke.API
             );
 
             services.AddScoped<DapperContext>();
-            services.AddScoped<IPokemonsRepository, PokemonsRepository>();
+            services.AddScoped<IPokemonRepository, PokemonRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDomainNotification, DomainNotification>();
 

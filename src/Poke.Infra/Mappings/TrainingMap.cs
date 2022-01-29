@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poke.Core.Entities;
+using Poke.Core.ValueObjects;
 
 namespace Poke.Infra.Mappings
 {
@@ -10,11 +10,12 @@ namespace Poke.Infra.Mappings
         {
             builder.ToTable("training", "dbo");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey("Id");
 
-            builder.Property(x => x.Id)
+            builder.Property("Id")
                 .HasColumnName("id")
                 .HasColumnType("uuid");
+            // builder.HasNoKey();
 
             builder.Property(x => x.EVYeld)
                 .HasColumnName("ev_yeld")
@@ -31,6 +32,8 @@ namespace Poke.Infra.Mappings
             builder.Property(x => x.PokemonId)
                 .HasColumnName("pokemon_id")
                 .HasColumnType("uuid");
+
+            builder.Ignore(x => x.Pokemon);
         }
     }
 }

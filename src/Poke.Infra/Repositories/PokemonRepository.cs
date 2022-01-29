@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Dapper;
 using Poke.Core.Entities;
 using Poke.Core.Interfaces.Repositories;
+using Poke.Core.Models;
 using Poke.Core.ValueObjects;
 using Poke.Infra.Context;
-using Poke.Infra.DAO;
+using Poke.Infra.DTO;
 
 namespace Poke.Infra.Repositories
 {
-    public class PokemonsRepository : EntityBaseRepository<Pokemon>,
-        IPokemonsRepository
+    public class PokemonRepository : EntityBaseRepository<Pokemon>,
+        IPokemonRepository
     {
         private readonly DapperContext _dapperContext;
         private readonly string _selectSimpleQuery = $@"
@@ -62,7 +63,7 @@ namespace Poke.Infra.Repositories
             INNER JOIN dbo.base_stats bs ON p.id = bs.pokemon_id
         ";
 
-        public PokemonsRepository(
+        public PokemonRepository(
             EntityContext context,
             DapperContext dapperContext
         ) : base(context)
@@ -70,7 +71,7 @@ namespace Poke.Infra.Repositories
             _dapperContext = dapperContext;
         }
 
-        public async Task<bool> PokemonExists(int number)
+        public async Task<bool> PokemonExistsAsync(int number)
         {
             var query = $@"SELECT COUNT(*) FROM dbo.pokemon WHERE number = @Number";
 
@@ -87,30 +88,34 @@ namespace Poke.Infra.Repositories
 
         public async Task<IEnumerable<Pokemon>> GetAllAsync()
         {
-            var query = _selectFullQuery + _innerTrainingQuery +
-                _innerBaseStatsQuery;
+            throw new NotImplementedException();
+            // var query = _selectFullQuery + _innerTrainingQuery +
+            //     _innerBaseStatsQuery;
 
-            return await _dapperContext
-                .DapperConnection
-                .QueryAsync<Pokemon, Training, BaseStatsDAO, Pokemon>(
-                    query,
-                    (pkmn, training, baseStatsDAO) =>
-                    {
-                        // TODO Estudar, em detalhes, ValueObjects
-                        var baseStats = new BaseStats(
-                            new Point(baseStatsDAO.HitPoints), new Point(baseStatsDAO.Attack),
-                            new Point(baseStatsDAO.Defense), new Point(baseStatsDAO.SpecialAttack),
-                            new Point(baseStatsDAO.SpecialDefense), new Point(baseStatsDAO.Speed)
-                        );
+            // return await _dapperContext
+            //     .DapperConnection
+            //     .QueryAsync<Pokemon, Training, BaseStatsDTO, Pokemon>(
+            //         query,
+            //         (pkmn, training, baseStatsDTO) =>
+            //         {
+            //             // TODO Estudar, em detalhes, ValueObjects
+            //             var baseStats = new BaseStats(
+            //                 new Point(baseStatsDTO.HitPoints),
+            //                 new Point(baseStatsDTO.Attack),
+            //                 new Point(baseStatsDTO.Defense),
+            //                 new Point(baseStatsDTO.SpecialAttack),
+            //                 new Point(baseStatsDTO.SpecialDefense),
+            //                 new Point(baseStatsDTO.Speed)
+            //             );
 
-                        pkmn.AddTrainingInformation(training);
+            //             pkmn.AddTrainingInformation(training);
 
-                        pkmn.AddBaseStatsInformation(baseStats);
+            //             pkmn.AddBaseStatsInformation(baseStats);
 
-                        return pkmn;
-                    },
-                    splitOn: "id"
-                );
+            //             return pkmn;
+            //         },
+            //         splitOn: "id"
+            //     );
         }
     }
 }

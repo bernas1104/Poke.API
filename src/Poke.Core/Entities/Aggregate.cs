@@ -16,6 +16,6 @@ namespace Poke.Core.Entities
             Id = id;
         }
 
-        public abstract bool IsValid();
+        public virtual bool IsNull => false;
     }
 }

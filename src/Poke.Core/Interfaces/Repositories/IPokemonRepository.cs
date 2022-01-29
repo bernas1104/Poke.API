@@ -4,9 +4,9 @@ using Poke.Core.Entities;
 
 namespace Poke.Core.Interfaces.Repositories
 {
-    public interface IPokemonsRepository : IEntityBaseRepository<Pokemon>
+    public interface IPokemonRepository : IEntityBaseRepository<Pokemon>
     {
-        Task<bool> PokemonExists(int number);
         Task<IEnumerable<Pokemon>> GetAllAsync();
+        Task<bool> PokemonExistsAsync(int number);
     }
 }
