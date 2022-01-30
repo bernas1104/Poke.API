@@ -5,20 +5,20 @@ using Xunit;
 
 namespace Poke.Unit.Tests.Core.Validations
 {
-    public class CreatePokemonValidationTest
+    public class PokemonValidationTest
     {
-        private readonly CreatePokemonValidation _validator;
+        private readonly PokemonValidation _validator;
 
-        public CreatePokemonValidationTest()
+        public PokemonValidationTest()
         {
-            _validator = new CreatePokemonValidation();
+            _validator = new PokemonValidation();
         }
 
         [Fact]
-        public void Should_Return_True_If_CreatePokemonRequest_Valid()
+        public void Should_Return_True_If_PokemonDTO_Valid()
         {
             // Arrange
-            var request = PokemonMock.CreatePokemonRequestFaker;
+            var request = PokemonMock.PokemonDTOFaker;
 
             // Act
             var validationResult = _validator.Validate(request);
@@ -32,13 +32,13 @@ namespace Poke.Unit.Tests.Core.Validations
         [Theory]
         [InlineData(0, null, null, 0d, 0d, null, 0, -1)]
         [InlineData(152, "", "", 0d, 0d, "", 16, 16)]
-        public void Should_Return_False_If_CreatePokemonRequest_Invalid(
+        public void Should_Return_False_If_PokemonDTO_Invalid(
             int number, string name, string species, double height,
             double weight, string imageUrl, int firstType, int secondType
         )
         {
             // Arrange
-            var request = PokemonMock.CreatePokemonRequestFaker
+            var request = PokemonMock.PokemonDTOFaker
                 .RuleFor(x => x.Number, number)
                 .RuleFor(x => x.Name, name)
                 .RuleFor(x => x.Species, species)

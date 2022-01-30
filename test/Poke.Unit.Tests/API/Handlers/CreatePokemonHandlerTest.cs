@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using FluentValidation.Results;
 using MediatR;
 using Moq;
+using Poke.API.AutoMapper;
 using Poke.API.Handlers;
 using Poke.Core.Commands.Requests;
 using Poke.Core.Entities;
@@ -21,6 +23,7 @@ namespace Poke.Unit.Tests.API.Handlers
         {
             _handler = new CreatePokemonHandler(
                 _repository.Object,
+                _mapper,
                 _domainNotification.Object,
                 _unitOfWork.Object
             );
@@ -39,12 +42,12 @@ namespace Poke.Unit.Tests.API.Handlers
                 .RuleFor(x => x.Name, pokemonName)
                 .RuleFor(
                     x => x.Training,
-                    () => TrainingMock.CreateTrainingRequestFaker
+                    () => TrainingMock.TrainingRequestFaker
                         .RuleFor(x => x.EVYeld, evYeld)
                 )
                 .RuleFor(
                     x => x.BaseStats,
-                    () => BaseStatsMock.CreateBaseStatsFaker
+                    () => BaseStatsMock.BaseStatsRequestFaker
                         .RuleFor(x => x.HitPoints, hitPoints)
                 );
 

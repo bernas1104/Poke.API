@@ -5,20 +5,20 @@ using Xunit;
 
 namespace Poke.Unit.Tests.Core.Validations
 {
-    public class CreateBaseStatsValidationTest
+    public class BaseStatsValidationTest
     {
-        private readonly CreateBaseStatsValidation _validator;
+        private readonly BaseStatsValidation _validator;
 
-        public CreateBaseStatsValidationTest()
+        public BaseStatsValidationTest()
         {
-            _validator = new CreateBaseStatsValidation();
+            _validator = new BaseStatsValidation();
         }
 
         [Fact]
-        public void Should_Return_True_If_CreateBaseStatsRequest_Valid()
+        public void Should_Return_True_If_BaseStatsDTO_Valid()
         {
             // Arrange
-            var request = BaseStatsMock.CreateBaseStatsFaker;
+            var request = BaseStatsMock.BaseStatsDTOFaker;
 
             // Act
             var validationResult = _validator.Validate(request);
@@ -32,13 +32,13 @@ namespace Poke.Unit.Tests.Core.Validations
         [Theory]
         [InlineData(0, 0, 0, 0, 0, 0)]
         [InlineData(256, 256, 256, 256, 256, 256)]
-        public void Should_Return_False_If_CreateBaseStatsRequest_Invalid(
+        public void Should_Return_False_If_BaseStatsDTO_Invalid(
             int hitPoints, int attack, int defense, int specialAttack,
             int specialDefense, int speed
         )
         {
             // Arrange
-            var request = BaseStatsMock.CreateBaseStatsFaker
+            var request = BaseStatsMock.BaseStatsDTOFaker
                 .RuleFor(x => x.HitPoints, hitPoints)
                 .RuleFor(x => x.Attack, attack)
                 .RuleFor(x => x.Defense, defense)

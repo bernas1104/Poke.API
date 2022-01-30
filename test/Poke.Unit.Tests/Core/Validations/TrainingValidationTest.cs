@@ -5,20 +5,20 @@ using Xunit;
 
 namespace Poke.Unit.Tests.Core.Validations
 {
-    public class CreateTrainingValidationTest
+    public class TrainingValidationTest
     {
-        private readonly CreateTrainingValidation _validator;
+        private readonly TrainingValidation _validator;
 
-        public CreateTrainingValidationTest()
+        public TrainingValidationTest()
         {
-            _validator = new CreateTrainingValidation();
+            _validator = new TrainingValidation();
         }
 
         [Fact]
-        public void Should_Return_True_If_CreateTrainingRequest_Valid()
+        public void Should_Return_True_If_TrainingDTO_Valid()
         {
             // Arrange
-            var request = TrainingMock.CreateTrainingRequestFaker;
+            var request = TrainingMock.TrainingDTOFaker;
 
             // Act
             var validationResult = _validator.Validate(request);
@@ -32,12 +32,12 @@ namespace Poke.Unit.Tests.Core.Validations
         [Theory]
         [InlineData(0, -1, -1)]
         [InlineData(4, 141, 6)]
-        public void Should_Return_False_If_CreateTrainingRequest_Invalid(
+        public void Should_Return_False_If_TrainingDTO_Invalid(
             int evYeld, int baseFriendship, int growthRate
         )
         {
             // Arrange
-            var request = TrainingMock.CreateTrainingRequestFaker
+            var request = TrainingMock.TrainingDTOFaker
                 .RuleFor(x => x.EVYeld, evYeld)
                 .RuleFor(x => x.BaseFriendship, baseFriendship)
                 .RuleFor(x => x.GrowthRate, growthRate);

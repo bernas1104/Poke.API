@@ -2,6 +2,7 @@ using System;
 using AutoBogus;
 using Bogus;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Models;
 using Poke.Core.ValueObjects;
 
@@ -28,8 +29,17 @@ namespace Poke.Core.Tests.Mocks
                     }
                 );
 
-        public static Faker<CreateBaseStatsRequest> CreateBaseStatsFaker =>
-            new Faker<CreateBaseStatsRequest>()
+        public static Faker<BaseStatsRequest> BaseStatsRequestFaker =>
+            new Faker<BaseStatsRequest>()
+                .RuleFor(x => x.HitPoints, f => f.Random.Int(1, 255))
+                .RuleFor(x => x.Attack, f => f.Random.Int(1, 255))
+                .RuleFor(x => x.Defense, f => f.Random.Int(1, 255))
+                .RuleFor(x => x.SpecialAttack, f => f.Random.Int(1, 255))
+                .RuleFor(x => x.SpecialDefense, f => f.Random.Int(1, 255))
+                .RuleFor(x => x.Speed, f => f.Random.Int(1, 255));
+
+        public static Faker<BaseStatsDTO> BaseStatsDTOFaker =>
+            new Faker<BaseStatsDTO>()
                 .RuleFor(x => x.HitPoints, f => f.Random.Int(1, 255))
                 .RuleFor(x => x.Attack, f => f.Random.Int(1, 255))
                 .RuleFor(x => x.Defense, f => f.Random.Int(1, 255))

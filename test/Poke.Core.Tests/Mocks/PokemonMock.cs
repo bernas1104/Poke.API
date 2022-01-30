@@ -2,8 +2,11 @@ using System;
 using AutoBogus;
 using Bogus;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Enums;
+using Poke.Core.Queries.Requests;
+using Poke.Core.Queries.Response;
 
 namespace Poke.Core.Tests.Mocks
 {
@@ -40,10 +43,50 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.ImageUrl, f => f.Internet.Url())
                 .RuleFor(x => x.FirstType, f => f.Random.Int(1, 15))
                 .RuleFor(x => x.SecondType, f => f.Random.Int(0, 15))
-                .RuleFor(x => x.BaseStats, BaseStatsMock.CreateBaseStatsFaker)
+                .RuleFor(x => x.BaseStats, BaseStatsMock.BaseStatsRequestFaker)
                 .RuleFor(
                     x => x.Training,
-                    TrainingMock.CreateTrainingRequestFaker
+                    TrainingMock.TrainingRequestFaker
+                );
+
+        public static Faker<PokemonDTO> PokemonDTOFaker =>
+            new Faker<PokemonDTO>()
+                .RuleFor(x => x.Number, f => f.Random.Int(1, 151))
+                .RuleFor(x => x.Name, f => f.Random.Word())
+                .RuleFor(x => x.Species, f => f.Random.Word())
+                .RuleFor(x => x.Height, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.Weight, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.ImageUrl, f => f.Internet.Url())
+                .RuleFor(x => x.FirstType, f => f.Random.Int(1, 15))
+                .RuleFor(x => x.SecondType, f => f.Random.Int(0, 15))
+                .RuleFor(x => x.BaseStats, BaseStatsMock.BaseStatsDTOFaker)
+                .RuleFor(x => x.Training, TrainingMock.TrainingDTOFaker);
+
+        public static Faker<PokemonQueryResponse> PokemonQueryResponseFaker =>
+            new Faker<PokemonQueryResponse>();
+
+        public static Faker<GetPokemonByNumberRequest> GetPokemonByNumberRequestFaker =>
+            new Faker<GetPokemonByNumberRequest>()
+                .RuleFor(x => x.Number, f => f.Random.Int(1, 151));
+
+        public static Faker<DeletePokemonByNumberRequest> DeletePokemonByNumberRequestFaker =>
+            new Faker<DeletePokemonByNumberRequest>()
+                .RuleFor(x => x.Number, f => f.Random.Int(1, 151));
+
+        public static Faker<UpdatePokemonByNumberRequest> UpdatePokemonByNumberRequestFaker =>
+            new Faker<UpdatePokemonByNumberRequest>()
+                .RuleFor(x => x.Number, f => f.Random.Int(1, 151))
+                .RuleFor(x => x.Name, f => f.Random.Word())
+                .RuleFor(x => x.Species, f => f.Random.Word())
+                .RuleFor(x => x.Height, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.Weight, f => f.Random.Double(0.01, 100))
+                .RuleFor(x => x.ImageUrl, f => f.Internet.Url())
+                .RuleFor(x => x.FirstType, f => f.Random.Int(1, 15))
+                .RuleFor(x => x.SecondType, f => f.Random.Int(0, 15))
+                .RuleFor(x => x.BaseStats, BaseStatsMock.BaseStatsRequestFaker)
+                .RuleFor(
+                    x => x.Training,
+                    TrainingMock.TrainingRequestFaker
                 );
     }
 }
