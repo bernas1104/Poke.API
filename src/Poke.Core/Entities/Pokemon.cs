@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Enums;
 using Poke.Core.ValueObjects;
+using Poke.Core.ValueObjects.Evolutions;
 
 namespace Poke.Core.Entities
 {
@@ -18,9 +20,15 @@ namespace Poke.Core.Entities
         public PokemonType SecondType { get; protected set; }
         public Training Training { get; protected set; }
         public BaseStats BaseStats { get; protected set; }
+        public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveFrom { get => _pokemonsEvolveFrom; }
+        public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveTo { get => _pokemonsEvolveTo; }
+        private List<Evolution> _pokemonsEvolveFrom;
+        private List<PreEvolution> _pokemonsEvolveTo;
 
         public Pokemon()
-        {}
+        {
+            //
+        }
 
         public Pokemon(CreatePokemonRequest request) : base()
         {
@@ -35,6 +43,9 @@ namespace Poke.Core.Entities
 
             Training = new Training(request.Training);
             BaseStats = new BaseStats(request.BaseStats);
+
+            _pokemonsEvolveFrom = new List<Evolution>();
+            _pokemonsEvolveTo = new List<PreEvolution>();
         }
 
         public Pokemon(
@@ -51,6 +62,9 @@ namespace Poke.Core.Entities
             ImageUrl = image_url;
             FirstType = first_type;
             SecondType = second_type;
+
+            _pokemonsEvolveFrom = new List<Evolution>();
+            _pokemonsEvolveTo = new List<PreEvolution>();
         }
 
         private Pokemon(PokemonDTO dto)
@@ -67,6 +81,9 @@ namespace Poke.Core.Entities
 
             Training = Training.FromTrainingDTO(dto.Training);
             BaseStats = BaseStats.FromBaseStatsDTO(dto.BaseStats);
+
+            _pokemonsEvolveFrom = new List<Evolution>();
+            _pokemonsEvolveTo = new List<PreEvolution>();
         }
 
         public void AddTrainingInformation(Training training)

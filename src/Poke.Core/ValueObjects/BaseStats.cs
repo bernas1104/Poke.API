@@ -49,9 +49,8 @@ namespace Poke.Core.ValueObjects
             PokemonId = pokemonId;
         }
 
-        private BaseStats(BaseStatsDTO dto)
+        private BaseStats(BaseStatsDTO dto) : base(dto.Id)
         {
-            Id = dto.Id;
             HitPoints = new Point(dto.HitPoints);
             Attack = new Point(dto.Attack);
             Defense = new Point(dto.Defense);

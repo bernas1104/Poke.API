@@ -35,9 +35,8 @@ namespace Poke.Core.ValueObjects
             PokemonId = pokemonId;
         }
 
-        private Training(TrainingDTO dto)
+        private Training(TrainingDTO dto) : base(dto.Id)
         {
-            Id = dto.Id;
             EVYeld = dto.EVYeld;
             BaseFriendship = dto.BaseFriendship;
             GrowthRate = (GrowthRate)dto.GrowthRate;
