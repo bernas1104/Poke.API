@@ -1,5 +1,6 @@
 using System;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Enums;
 using Poke.Core.ValueObjects;
 
@@ -52,6 +53,22 @@ namespace Poke.Core.Entities
             SecondType = second_type;
         }
 
+        private Pokemon(PokemonDTO dto)
+        {
+            Id = dto.Id;
+            Number = dto.Number;
+            Name = dto.Name;
+            Species = dto.Species;
+            Height = dto.Height;
+            Weight = dto.Weight;
+            ImageUrl = dto.ImageUrl;
+            FirstType = (PokemonType)dto.FirstType;
+            SecondType = (PokemonType)dto.SecondType;
+
+            Training = Training.FromTrainingDTO(dto.Training);
+            BaseStats = BaseStats.FromBaseStatsDTO(dto.BaseStats);
+        }
+
         public void AddTrainingInformation(Training training)
         {
             Training = training;
@@ -60,6 +77,25 @@ namespace Poke.Core.Entities
         public void AddBaseStatsInformation(BaseStats baseStats)
         {
             BaseStats = baseStats;
+        }
+
+        public void UpdatePokemonData(UpdatePokemonByNumberRequest request)
+        {
+            Name = request.Name;
+            Species = request.Species;
+            Height = request.Height;
+            Weight = request.Weight;
+            ImageUrl = request.ImageUrl;
+            FirstType = (PokemonType)request.FirstType;
+            SecondType = (PokemonType)request.SecondType;
+
+            Training.UpdatePokemonTrainingData(request.Training);
+            BaseStats.UpdatePokemonBaseStatsData(request.BaseStats);
+        }
+
+        public static Pokemon FromPokemonDTO(PokemonDTO dto)
+        {
+            return new Pokemon(dto);
         }
     }
 }

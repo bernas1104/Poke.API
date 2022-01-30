@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Poke.Core.DTOs;
 using Poke.Core.Entities;
+using Poke.Core.Entities.Nullables;
 using Poke.Core.Interfaces.Repositories;
-using Poke.Core.Models;
-using Poke.Core.ValueObjects;
 using Poke.Infra.Context;
-using Poke.Infra.DTO;
 
 namespace Poke.Infra.Repositories
 {
@@ -18,49 +16,51 @@ namespace Poke.Infra.Repositories
         private readonly DapperContext _dapperContext;
         private readonly string _selectSimpleQuery = $@"
             SELECT
-                p.id ,
-                p.number ,
-                p.name ,
-                p.species ,
-                p.height ,
-                p.weight ,
-                p.image_url as imageUrl ,
-                p.first_type as firstType,
-                p.second_type as seconType
-            FROM dbo.pokemon p
+                p.id,
+                p.number,
+                p.name,
+                p.species,
+                p.height,
+                p.weight,
+                p.image_url AS imageUrl,
+                p.first_type AS firstType,
+                p.second_type AS secondType
+            FROM dbo.pokemon AS p
         ";
 
         private readonly string _selectFullQuery = $@"
             SELECT
-                p.id ,
-                p.number ,
-                p.name ,
-                p.species ,
-                p.height ,
-                p.weight ,
-                p.image_url as imageUrl,
-                p.first_type as firstType,
-                p.second_type as secondType,
-                t.id,
-                t.ev_yeld as evYeld,
-                t.base_friendship as baseFriendship,
-                t.growth_rate as growthRate,
+                p.id,
+                p.number,
+                p.name,
+                p.species,
+                p.height,
+                p.weight,
+                p.image_url AS imageUrl,
+                p.first_type AS firstType,
+                p.second_type AS secondType,
                 bs.id,
-                bs.hitpoints ,
-                bs.attack ,
-                bs.defense ,
-                bs.special_attack as specialAttack,
-                bs.special_defense as specialDefense,
-                bs.speed
-            FROM dbo.pokemon p
+                bs.hitpoints,
+                bs.attack,
+                bs.defense,
+                bs.special_attack AS SpecialAttack,
+                bs.special_defense AS SpecialDefense,
+                bs.speed,
+                bs.pokemon_id AS PokemonId,
+                t.id,
+                t.ev_yeld AS evYeld,
+                t.base_friendship AS baseFriendship,
+                t.growth_rate AS growthRate,
+                t.pokemon_id AS pokemonId
+            FROM dbo.pokemon AS p
         ";
 
         private readonly string _innerTrainingQuery = $@"
-            INNER JOIN dbo.training t ON p.id = t.pokemon_id
+            INNER JOIN dbo.training AS t ON t.pokemon_id = p.id
         ";
 
         private readonly string _innerBaseStatsQuery = $@"
-            INNER JOIN dbo.base_stats bs ON p.id = bs.pokemon_id
+            INNER JOIN dbo.base_stats AS bs ON bs.pokemon_id = p.id
         ";
 
         public PokemonRepository(
@@ -88,34 +88,54 @@ namespace Poke.Infra.Repositories
 
         public async Task<IEnumerable<Pokemon>> GetAllAsync()
         {
-            throw new NotImplementedException();
-            // var query = _selectFullQuery + _innerTrainingQuery +
-            //     _innerBaseStatsQuery;
+            var query = _selectFullQuery + _innerTrainingQuery +
+                _innerBaseStatsQuery;
 
-            // return await _dapperContext
-            //     .DapperConnection
-            //     .QueryAsync<Pokemon, Training, BaseStatsDTO, Pokemon>(
-            //         query,
-            //         (pkmn, training, baseStatsDTO) =>
-            //         {
-            //             // TODO Estudar, em detalhes, ValueObjects
-            //             var baseStats = new BaseStats(
-            //                 new Point(baseStatsDTO.HitPoints),
-            //                 new Point(baseStatsDTO.Attack),
-            //                 new Point(baseStatsDTO.Defense),
-            //                 new Point(baseStatsDTO.SpecialAttack),
-            //                 new Point(baseStatsDTO.SpecialDefense),
-            //                 new Point(baseStatsDTO.Speed)
-            //             );
+            var pokemonDto = await _dapperContext.DapperConnection
+                .QueryAsync<PokemonDTO, BaseStatsDTO, TrainingDTO, PokemonDTO>(
+                    query,
+                    map: MapPokemon,
+                    splitOn: "id"
+                );
 
-            //             pkmn.AddTrainingInformation(training);
+            var pokemons = new List<Pokemon>();
+            foreach (var dto in pokemonDto)
+            {
+                pokemons.Add(Pokemon.FromPokemonDTO(dto));
+            }
 
-            //             pkmn.AddBaseStatsInformation(baseStats);
+            return pokemons;
+        }
 
-            //             return pkmn;
-            //         },
-            //         splitOn: "id"
-            //     );
+        public async Task<Pokemon> GetByNumberAsync(int number)
+        {
+            var query = _selectFullQuery + _innerTrainingQuery +
+                _innerBaseStatsQuery + $" WHERE p.number = {number}";
+
+            var queryResult = await _dapperContext.DapperConnection
+                .QueryAsync<PokemonDTO, BaseStatsDTO, TrainingDTO, PokemonDTO>(
+                    query,
+                    map: MapPokemon,
+                    splitOn: "id"
+                );
+
+            var pokemonDto = queryResult.FirstOrDefault();
+
+            return pokemonDto is not null ?
+                Pokemon.FromPokemonDTO(pokemonDto) :
+                new NullPokemon();
+        }
+
+        private PokemonDTO MapPokemon(
+            PokemonDTO pkmnDto,
+            BaseStatsDTO baseDto,
+            TrainingDTO trainingDto
+        )
+        {
+            pkmnDto.Training = trainingDto;
+            pkmnDto.BaseStats = baseDto;
+
+            return pkmnDto;
         }
     }
 }

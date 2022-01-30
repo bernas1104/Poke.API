@@ -1,11 +1,13 @@
+
 using MediatR;
-using Poke.Core.Entities;
+using Newtonsoft.Json;
 
 namespace Poke.Core.Commands.Requests
 {
-    public record CreatePokemonRequest : IRequest<Pokemon>
+    public record UpdatePokemonByNumberRequest : IRequest<Unit>
     {
-        public int Number { get; init; }
+        [JsonIgnore]
+        public int Number { get; set; }
         public string Name { get; init; }
         public string Species { get; init; }
         public double Height { get; init; }

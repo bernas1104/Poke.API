@@ -1,5 +1,6 @@
 using System;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Models;
 
@@ -23,7 +24,7 @@ namespace Poke.Core.ValueObjects
         public BaseStats()
         {}
 
-        public BaseStats(CreateBaseStatsRequest request)
+        public BaseStats(BaseStatsRequest request)
         {
             HitPoints = new Point(request.HitPoints);
             Attack = new Point(request.Attack);
@@ -46,6 +47,32 @@ namespace Poke.Core.ValueObjects
             SpecialDefense = specialDefense;
             Speed = speed;
             PokemonId = pokemonId;
+        }
+
+        private BaseStats(BaseStatsDTO dto)
+        {
+            Id = dto.Id;
+            HitPoints = new Point(dto.HitPoints);
+            Attack = new Point(dto.Attack);
+            Defense = new Point(dto.Defense);
+            SpecialAttack = new Point(dto.SpecialAttack);
+            SpecialDefense = new Point(dto.SpecialDefense);
+            Speed = new Point(dto.Speed);
+        }
+
+        public static BaseStats FromBaseStatsDTO(BaseStatsDTO dto)
+        {
+            return new BaseStats(dto);
+        }
+
+        public void UpdatePokemonBaseStatsData(BaseStatsRequest request)
+        {
+            HitPoints = new Point(request.HitPoints);
+            Attack = new Point(request.Attack);
+            Defense = new Point(request.Defense);
+            SpecialAttack = new Point(request.SpecialAttack);
+            SpecialDefense = new Point(request.SpecialDefense);
+            Speed = new Point(request.Speed);
         }
     }
 }

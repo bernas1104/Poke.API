@@ -1,5 +1,6 @@
 using System;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Enums;
 
@@ -16,7 +17,7 @@ namespace Poke.Core.ValueObjects
         public Training()
         {}
 
-        public Training(CreateTrainingRequest request)
+        public Training(TrainingRequest request)
         {
             EVYeld = request.EVYeld;
             BaseFriendship = request.BaseFriendship;
@@ -32,6 +33,26 @@ namespace Poke.Core.ValueObjects
             BaseFriendship = baseFrindship;
             GrowthRate = growthRate;
             PokemonId = pokemonId;
+        }
+
+        private Training(TrainingDTO dto)
+        {
+            Id = dto.Id;
+            EVYeld = dto.EVYeld;
+            BaseFriendship = dto.BaseFriendship;
+            GrowthRate = (GrowthRate)dto.GrowthRate;
+        }
+
+        public void UpdatePokemonTrainingData(TrainingRequest request)
+        {
+            EVYeld = request.EVYeld;
+            BaseFriendship = request.BaseFriendship;
+            GrowthRate = (GrowthRate)request.GrowthRate;
+        }
+
+        public static Training FromTrainingDTO(TrainingDTO dto)
+        {
+            return new Training(dto);
         }
     }
 }

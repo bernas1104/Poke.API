@@ -1,12 +1,12 @@
 using FluentValidation;
-using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 
 namespace Poke.Core.Validations
 {
-    public class CreateBaseStatsValidation :
-        AbstractValidator<CreateBaseStatsRequest>
+    public class BaseStatsValidation :
+        AbstractValidator<BaseStatsDTO>
     {
-        public CreateBaseStatsValidation()
+        public BaseStatsValidation()
         {
             RuleFor(x => x.HitPoints)
                 .InclusiveBetween(1, 255)

@@ -1,6 +1,6 @@
 namespace Poke.Core.Commands.Requests
 {
-    public record CreateTrainingRequest
+    public record TrainingRequest
     {
         public int EVYeld { get; init; }
         public int BaseFriendship { get; init; }

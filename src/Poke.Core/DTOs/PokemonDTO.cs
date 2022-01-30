@@ -1,10 +1,10 @@
-using MediatR;
-using Poke.Core.Entities;
+using System;
 
-namespace Poke.Core.Commands.Requests
+namespace Poke.Core.DTOs
 {
-    public record CreatePokemonRequest : IRequest<Pokemon>
+    public record PokemonDTO
     {
+        public Guid Id { get; init; }
         public int Number { get; init; }
         public string Name { get; init; }
         public string Species { get; init; }
@@ -12,8 +12,8 @@ namespace Poke.Core.Commands.Requests
         public double Weight { get; init; }
         public string ImageUrl { get; init; }
         public int FirstType { get; init; }
-        public int? SecondType { get; init; }
-        public BaseStatsRequest BaseStats { get; init; }
-        public TrainingRequest Training { get; init; }
+        public int SecondType { get; init; }
+        public TrainingDTO Training { get; set; }
+        public BaseStatsDTO BaseStats { get; set; }
     }
 }

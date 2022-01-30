@@ -4,7 +4,7 @@ namespace Poke.Core.ValueObjects
 {
     public abstract class ValueObject
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; protected set; }
         public virtual bool IsNull => false;
     }
 }

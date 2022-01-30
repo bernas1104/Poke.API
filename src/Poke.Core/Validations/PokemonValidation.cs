@@ -1,12 +1,12 @@
 using FluentValidation;
-using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 
 namespace Poke.Core.Validations
 {
-    public class CreatePokemonValidation :
-        AbstractValidator<CreatePokemonRequest>
+    public class PokemonValidation :
+        AbstractValidator<PokemonDTO>
     {
-        public CreatePokemonValidation()
+        public PokemonValidation()
         {
             RuleFor(x => x.Number)
                 .InclusiveBetween(1, 151)
@@ -40,9 +40,9 @@ namespace Poke.Core.Validations
                 .InclusiveBetween(0, 15)
                 .WithMessage("Pokemon: second type must be between 0 and 15.");
 
-            RuleFor(x => x.Training).SetValidator(new CreateTrainingValidation());
+            RuleFor(x => x.Training).SetValidator(new TrainingValidation());
 
-            RuleFor(x => x.BaseStats).SetValidator(new CreateBaseStatsValidation());
+            RuleFor(x => x.BaseStats).SetValidator(new BaseStatsValidation());
         }
     }
 }

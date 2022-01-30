@@ -1,12 +1,12 @@
 using FluentValidation;
-using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 
 namespace Poke.Core.Validations
 {
-    public class CreateTrainingValidation :
-        AbstractValidator<CreateTrainingRequest>
+    public class TrainingValidation :
+        AbstractValidator<TrainingDTO>
     {
-        public CreateTrainingValidation()
+        public TrainingValidation()
         {
             RuleFor(x => x.EVYeld)
                 .InclusiveBetween(1, 3)

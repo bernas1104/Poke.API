@@ -1,7 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Poke.Core.Commands.Requests;
+using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Entities.Nullables;
 using Poke.Core.Interfaces.Notifications;
@@ -15,20 +17,23 @@ namespace Poke.API.Handlers
     public class CreatePokemonHandler :
         IRequestHandler<CreatePokemonRequest, Pokemon>
     {
-        private readonly CreatePokemonValidation _validator;
+        private readonly PokemonValidation _validator;
         private readonly IPokemonRepository _repository;
+        private readonly IMapper _mapper;
         private readonly IDomainNotification _domainNotification;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreatePokemonHandler(
             IPokemonRepository pokemonRepository,
+            IMapper mapper,
             IDomainNotification domainNotification,
             IUnitOfWork unitOfWork
         )
         {
-            _validator = new CreatePokemonValidation();
+            _validator = new PokemonValidation();
 
             _repository = pokemonRepository;
+            _mapper = mapper;
             _domainNotification = domainNotification;
             _unitOfWork = unitOfWork;
         }
@@ -38,7 +43,9 @@ namespace Poke.API.Handlers
             CancellationToken cancellationToken
         )
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult = _validator.Validate(
+                _mapper.Map<PokemonDTO>(request)
+            );
             if (!validationResult.IsValid)
             {
                 _domainNotification.AddValidationNotifications(
