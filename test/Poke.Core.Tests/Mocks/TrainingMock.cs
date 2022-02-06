@@ -10,14 +10,14 @@ namespace Poke.Core.Tests.Mocks
 {
     public static class TrainingMock
     {
-        public static Faker<Training> TrainingFaker(Guid pokemonId) =>
+        public static Faker<Training> TrainingFaker(int pokemonNumber) =>
             new AutoFaker<Training>()
                 .CustomInstantiator(
                     f =>
                     {
                         return new Training(
                             f.Random.Int(1, 3), f.Random.Int(50, 140),
-                            (GrowthRate)f.Random.Int(0, 5), pokemonId
+                            (GrowthRate)f.Random.Int(0, 5), pokemonNumber
                         );
                     }
                 );

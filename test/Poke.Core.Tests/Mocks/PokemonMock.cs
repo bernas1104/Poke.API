@@ -47,6 +47,16 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(
                     x => x.Training,
                     TrainingMock.TrainingRequestFaker
+                )
+                .RuleFor(
+                    x => x.Evolutions,
+                    f => EvolutionMock.CreatePokemonEvolutionRequestFaker
+                        .Generate(f.Random.Int(0, 1))
+                )
+                .RuleFor(
+                    x => x.PreEvolutions,
+                    f => EvolutionMock.CreatePokemonPreEvolutionRequestFaker
+                        .Generate(f.Random.Int(0, 1))
                 );
 
         public static Faker<PokemonDTO> PokemonDTOFaker =>
@@ -87,6 +97,13 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(
                     x => x.Training,
                     TrainingMock.TrainingRequestFaker
+                );
+
+        public static Faker<CreatePokemonFamilyRequest> CreatePokemonFamilyRequestFaker =>
+            new Faker<CreatePokemonFamilyRequest>()
+                .RuleFor(
+                    x => x.Pokemons,
+                    f => CreatePokemonRequestFaker.Generate(f.Random.Int(1, 3))
                 );
     }
 }
