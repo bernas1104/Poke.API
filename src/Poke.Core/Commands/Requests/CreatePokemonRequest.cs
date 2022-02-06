@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MediatR;
 using Poke.Core.Entities;
 
@@ -15,5 +16,7 @@ namespace Poke.Core.Commands.Requests
         public int? SecondType { get; init; }
         public BaseStatsRequest BaseStats { get; init; }
         public TrainingRequest Training { get; init; }
+        public List<CreatePokemonEvolutionRequest> Evolutions { get; init; }
+        public List<CreatePokemonEvolutionRequest> PreEvolutions { get; init; }
     }
 }

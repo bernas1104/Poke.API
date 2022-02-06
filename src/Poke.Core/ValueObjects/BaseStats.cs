@@ -18,7 +18,7 @@ namespace Poke.Core.ValueObjects
             get => HitPoints.Value + Attack.Value + Defense.Value +
                 SpecialAttack.Value + SpecialDefense.Value + Speed.Value;
         }
-        public Guid PokemonId { get; protected set; }
+        public int PokemonNumber { get; protected set; }
         public Pokemon Pokemon { get; protected set; }
 
         public BaseStats()
@@ -37,7 +37,7 @@ namespace Poke.Core.ValueObjects
         public BaseStats(
             Point hitPoints, Point attack, Point defense,
             Point specialAttack, Point specialDefense, Point speed,
-            Guid pokemonId
+            int pokemonNumber
         )
         {
             HitPoints = hitPoints;
@@ -46,12 +46,11 @@ namespace Poke.Core.ValueObjects
             SpecialAttack = specialAttack;
             SpecialDefense = specialDefense;
             Speed = speed;
-            PokemonId = pokemonId;
+            PokemonNumber = pokemonNumber;
         }
 
-        private BaseStats(BaseStatsDTO dto)
+        private BaseStats(BaseStatsDTO dto) : base(dto.Id)
         {
-            Id = dto.Id;
             HitPoints = new Point(dto.HitPoints);
             Attack = new Point(dto.Attack);
             Defense = new Point(dto.Defense);

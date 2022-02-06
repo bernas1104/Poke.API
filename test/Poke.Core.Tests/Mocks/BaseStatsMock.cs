@@ -10,7 +10,7 @@ namespace Poke.Core.Tests.Mocks
 {
     public static class BaseStatsMock
     {
-        public static Faker<BaseStats> BaseStatsFaker(Guid pokemonId) =>
+        public static Faker<BaseStats> BaseStatsFaker(int pokemonNumber) =>
             new AutoFaker<BaseStats>()
                 .CustomInstantiator(
                     f =>
@@ -24,7 +24,7 @@ namespace Poke.Core.Tests.Mocks
 
                         return new BaseStats(
                             hitPoints, attack, defense,
-                            specialAttack, specialDefense, speed, pokemonId
+                            specialAttack, specialDefense, speed, pokemonNumber
                         );
                     }
                 );

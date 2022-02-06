@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Enums;
 using Poke.Core.ValueObjects;
+using Poke.Core.ValueObjects.Evolutions;
 
 namespace Poke.Core.Entities
 {
@@ -18,12 +20,19 @@ namespace Poke.Core.Entities
         public PokemonType SecondType { get; protected set; }
         public Training Training { get; protected set; }
         public BaseStats BaseStats { get; protected set; }
+        public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveFrom { get => _pokemonsEvolveFrom; }
+        public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveTo { get => _pokemonsEvolveTo; }
+        private List<AbstractEvolution> _pokemonsEvolveFrom;
+        private List<AbstractEvolution> _pokemonsEvolveTo;
 
         public Pokemon()
-        {}
+        {
+            //
+        }
 
         public Pokemon(CreatePokemonRequest request) : base()
         {
+            Id = Guid.NewGuid();
             Number = request.Number;
             Name = request.Name;
             Species = request.Species;
@@ -35,6 +44,48 @@ namespace Poke.Core.Entities
 
             Training = new Training(request.Training);
             BaseStats = new BaseStats(request.BaseStats);
+
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
+
+            SetEvolutionsFromRequest(request.Evolutions);
+            SetPreEvolutionsFromRequest(request.PreEvolutions);
+        }
+
+        private void SetEvolutionsFromRequest(
+            List<CreatePokemonEvolutionRequest> requests
+        )
+        {
+            if (requests is not null)
+            {
+                foreach (var evolutionRequest in requests)
+                {
+                    _pokemonsEvolveTo.Add(
+                        Evolution.FromCreatePokemonEvolutionRequest(
+                            evolutionRequest,
+                            Number
+                        )
+                    );
+                }
+            }
+        }
+
+        private void SetPreEvolutionsFromRequest(
+            List<CreatePokemonEvolutionRequest> requests
+        )
+        {
+            if (requests is not null)
+            {
+                foreach (var preEvolutionRequest in requests)
+                {
+                    _pokemonsEvolveFrom.Add(
+                        PreEvolution.FromCreatePokemonEvolutionRequest(
+                            preEvolutionRequest,
+                            Number
+                        )
+                    );
+                }
+            }
         }
 
         public Pokemon(
@@ -51,6 +102,9 @@ namespace Poke.Core.Entities
             ImageUrl = image_url;
             FirstType = first_type;
             SecondType = second_type;
+
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
         }
 
         private Pokemon(PokemonDTO dto)
@@ -67,6 +121,9 @@ namespace Poke.Core.Entities
 
             Training = Training.FromTrainingDTO(dto.Training);
             BaseStats = BaseStats.FromBaseStatsDTO(dto.BaseStats);
+
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
         }
 
         public void AddTrainingInformation(Training training)
@@ -91,6 +148,28 @@ namespace Poke.Core.Entities
 
             Training.UpdatePokemonTrainingData(request.Training);
             BaseStats.UpdatePokemonBaseStatsData(request.BaseStats);
+        }
+
+        public void SetPokemonEvolutions(List<AbstractEvolution> evolutions)
+        {
+            _pokemonsEvolveTo = evolutions;
+        }
+
+        public void SetPokemonPreEvolutions(
+            List<AbstractEvolution> preEvolutions
+        )
+        {
+            _pokemonsEvolveFrom = preEvolutions;
+        }
+
+        public void AddPokemonEvolution(Evolution evolution)
+        {
+            _pokemonsEvolveTo.Add(evolution);
+        }
+
+        public void AddPokemonPreEvolution(PreEvolution preEvolution)
+        {
+            _pokemonsEvolveFrom.Add(preEvolution);
         }
 
         public static Pokemon FromPokemonDTO(PokemonDTO dto)

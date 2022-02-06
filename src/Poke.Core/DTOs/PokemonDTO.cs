@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Poke.Core.DTOs
 {
@@ -15,5 +16,7 @@ namespace Poke.Core.DTOs
         public int SecondType { get; init; }
         public TrainingDTO Training { get; set; }
         public BaseStatsDTO BaseStats { get; set; }
+        public IReadOnlyCollection<PokemonEvolutionDTO> Evolutions { get; set; }
+        public IReadOnlyCollection<PokemonEvolutionDTO> PreEvolutions { get; set; }
     }
 }

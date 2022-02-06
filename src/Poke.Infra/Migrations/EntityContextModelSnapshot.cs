@@ -16,34 +16,42 @@ namespace Poke.Infra.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.9")
+                .HasAnnotation("ProductVersion", "5.0.13")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("Poke.Core.Entities.BaseStats", b =>
+            modelBuilder.Entity("Poke.Core.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("PokemonId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pokemon_id");
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("HeldItem")
+                        .HasColumnType("boolean")
+                        .HasColumnName("held_item");
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("integer")
+                        .HasColumnName("item_type");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PokemonId")
-                        .IsUnique();
-
-                    b.ToTable("base_stats", "dbo");
+                    b.ToTable("item", "dbo");
                 });
 
             modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<int>("Number")
+                        .HasColumnType("integer")
+                        .HasColumnName("number");
 
                     b.Property<int>("FirstType")
                         .HasColumnType("integer")
@@ -53,6 +61,11 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("numeric(38,17)")
                         .HasColumnName("height");
 
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("varchar")
                         .HasColumnName("image_url");
@@ -60,10 +73,6 @@ namespace Poke.Infra.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("varchar")
                         .HasColumnName("name");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("integer")
-                        .HasColumnName("number");
 
                     b.Property<int>("SecondType")
                         .HasColumnType("integer")
@@ -77,14 +86,82 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("numeric(38,17)")
                         .HasColumnName("weight");
 
-                    b.HasKey("Id");
+                    b.HasKey("Number");
 
-                    b.HasIndex("Number");
+                    b.HasIndex("Id");
 
                     b.ToTable("pokemon", "dbo");
                 });
 
-            modelBuilder.Entity("Poke.Core.Entities.Training", b =>
+            modelBuilder.Entity("Poke.Core.ValueObjects.AbstractEvolution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ToNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("to_number");
+
+                    b.Property<int>("FromNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("from_number");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("discriminator");
+
+                    b.Property<int?>("EvolutionStone")
+                        .HasColumnType("integer")
+                        .HasColumnName("evolution_stone");
+
+                    b.Property<int>("EvolutionType")
+                        .HasColumnType("integer")
+                        .HasColumnName("evolution_type");
+
+                    b.Property<Guid?>("HeldItemId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("held_item_id");
+
+                    b.Property<int?>("PokemonEvolutionLevel")
+                        .HasColumnType("integer")
+                        .HasColumnName("pokemon_evolution_level");
+
+                    b.HasKey("Id", "ToNumber", "FromNumber");
+
+                    b.HasIndex("FromNumber");
+
+                    b.HasIndex("HeldItemId");
+
+                    b.HasIndex("ToNumber");
+
+                    b.ToTable("evolution", "dbo");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("AbstractEvolution");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.BaseStats", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("PokemonNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("pokemon_number");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PokemonNumber")
+                        .IsUnique();
+
+                    b.ToTable("base_stats", "dbo");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,27 +180,66 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("growth_rate");
 
-                    b.Property<Guid>("PokemonId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pokemon_id");
+                    b.Property<int>("PokemonNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("pokemon_number");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PokemonId")
+                    b.HasIndex("PokemonNumber")
                         .IsUnique();
 
                     b.ToTable("training", "dbo");
                 });
 
-            modelBuilder.Entity("Poke.Core.Entities.BaseStats", b =>
+            modelBuilder.Entity("Poke.Core.ValueObjects.Evolutions.Evolution", b =>
                 {
-                    b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
-                        .WithOne("BaseStats")
-                        .HasForeignKey("Poke.Core.Entities.BaseStats", "PokemonId")
+                    b.HasBaseType("Poke.Core.ValueObjects.AbstractEvolution");
+
+                    b.HasDiscriminator().HasValue("Evolution");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.Evolutions.PreEvolution", b =>
+                {
+                    b.HasBaseType("Poke.Core.ValueObjects.AbstractEvolution");
+
+                    b.HasDiscriminator().HasValue("PreEvolution");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.AbstractEvolution", b =>
+                {
+                    b.HasOne("Poke.Core.Entities.Pokemon", "PokemonEvolvesFrom")
+                        .WithMany("PokemonsEvolveTo")
+                        .HasForeignKey("FromNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "Attack", b1 =>
+                    b.HasOne("Poke.Core.Entities.Item", "HeldItem")
+                        .WithMany()
+                        .HasForeignKey("HeldItemId");
+
+                    b.HasOne("Poke.Core.Entities.Pokemon", "PokemonEvolvesTo")
+                        .WithMany("PokemonsEvolveFrom")
+                        .HasForeignKey("ToNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HeldItem");
+
+                    b.Navigation("PokemonEvolvesFrom");
+
+                    b.Navigation("PokemonEvolvesTo");
+                });
+
+            modelBuilder.Entity("Poke.Core.ValueObjects.BaseStats", b =>
+                {
+                    b.HasOne("Poke.Core.Entities.Pokemon", null)
+                        .WithOne("BaseStats")
+                        .HasForeignKey("Poke.Core.ValueObjects.BaseStats", "PokemonNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Poke.Core.Models.Point", "Attack", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -140,7 +256,7 @@ namespace Poke.Infra.Migrations
                                 .HasForeignKey("BaseStatsId");
                         });
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "Defense", b1 =>
+                    b.OwnsOne("Poke.Core.Models.Point", "Defense", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -157,7 +273,7 @@ namespace Poke.Infra.Migrations
                                 .HasForeignKey("BaseStatsId");
                         });
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "HitPoints", b1 =>
+                    b.OwnsOne("Poke.Core.Models.Point", "HitPoints", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -174,7 +290,7 @@ namespace Poke.Infra.Migrations
                                 .HasForeignKey("BaseStatsId");
                         });
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "SpecialAttack", b1 =>
+                    b.OwnsOne("Poke.Core.Models.Point", "SpecialAttack", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -191,7 +307,7 @@ namespace Poke.Infra.Migrations
                                 .HasForeignKey("BaseStatsId");
                         });
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "SpecialDefense", b1 =>
+                    b.OwnsOne("Poke.Core.Models.Point", "SpecialDefense", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -208,7 +324,7 @@ namespace Poke.Infra.Migrations
                                 .HasForeignKey("BaseStatsId");
                         });
 
-                    b.OwnsOne("Poke.Core.ValueObjects.Point", "Speed", b1 =>
+                    b.OwnsOne("Poke.Core.Models.Point", "Speed", b1 =>
                         {
                             b1.Property<Guid>("BaseStatsId")
                                 .HasColumnType("uuid");
@@ -231,8 +347,6 @@ namespace Poke.Infra.Migrations
 
                     b.Navigation("HitPoints");
 
-                    b.Navigation("Pokemon");
-
                     b.Navigation("SpecialAttack");
 
                     b.Navigation("SpecialDefense");
@@ -240,20 +354,22 @@ namespace Poke.Infra.Migrations
                     b.Navigation("Speed");
                 });
 
-            modelBuilder.Entity("Poke.Core.Entities.Training", b =>
+            modelBuilder.Entity("Poke.Core.ValueObjects.Training", b =>
                 {
-                    b.HasOne("Poke.Core.Entities.Pokemon", "Pokemon")
+                    b.HasOne("Poke.Core.Entities.Pokemon", null)
                         .WithOne("Training")
-                        .HasForeignKey("Poke.Core.Entities.Training", "PokemonId")
+                        .HasForeignKey("Poke.Core.ValueObjects.Training", "PokemonNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Pokemon");
                 });
 
             modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
                 {
                     b.Navigation("BaseStats");
+
+                    b.Navigation("PokemonsEvolveFrom");
+
+                    b.Navigation("PokemonsEvolveTo");
 
                     b.Navigation("Training");
                 });

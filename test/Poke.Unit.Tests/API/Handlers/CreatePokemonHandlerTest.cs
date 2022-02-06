@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
-using AutoMapper;
 using FluentAssertions;
 using FluentValidation.Results;
 using MediatR;
 using Moq;
-using Poke.API.AutoMapper;
 using Poke.API.Handlers;
 using Poke.Core.Commands.Requests;
 using Poke.Core.Entities;
