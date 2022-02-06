@@ -11,21 +11,22 @@ namespace Poke.Infra.Mappings
         {
             builder.ToTable("evolution", "dbo");
 
-            builder.HasKey(x => new { x.Id, x.ToId, x.FromId });
+            builder.HasKey(x => new { x.Id, x.ToNumber, x.FromNumber });
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
                 .HasColumnType("uuid")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.Property(x => x.FromId)
-                .HasColumnName("from_id")
-                .HasColumnType("uuid")
+            builder.Property(x => x.FromNumber)
+                .HasColumnName("from_number")
+                .HasColumnType("int")
                 .IsRequired();
 
-            builder.Property(x => x.ToId)
-                .HasColumnName("to_id")
-                .HasColumnType("uuid")
+            builder.Property(x => x.ToNumber)
+                .HasColumnName("to_number")
+                .HasColumnType("int")
                 .IsRequired();
 
             builder.Property(x => x.EvolutionType)
@@ -45,11 +46,11 @@ namespace Poke.Infra.Mappings
 
             builder.HasOne<Pokemon>(x => x.PokemonEvolvesFrom)
                 .WithMany(x => x.PokemonsEvolveTo)
-                .HasForeignKey(x => x.FromId);
+                .HasForeignKey(x => x.FromNumber);
 
             builder.HasOne<Pokemon>(x => x.PokemonEvolvesTo)
                 .WithMany(x => x.PokemonsEvolveFrom)
-                .HasForeignKey(x => x.ToId);
+                .HasForeignKey(x => x.ToNumber);
         }
     }
 }

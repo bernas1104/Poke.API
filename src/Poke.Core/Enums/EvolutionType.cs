@@ -10,5 +10,9 @@ namespace Poke.Core.Enums
         Stone,
         [Description("Friendship")]
         Friendship,
+        [Description("Trade")]
+        Trade,
+        [Description("Trade with item")]
+        TradeWithItem
     }
 }

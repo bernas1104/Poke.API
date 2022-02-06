@@ -15,7 +15,6 @@ namespace Poke.Infra.Mappings
             builder.Property("Id")
                 .HasColumnName("id")
                 .HasColumnType("uuid");
-            // builder.HasNoKey();
 
             builder.Property(x => x.EVYeld)
                 .HasColumnName("ev_yeld")
@@ -29,9 +28,9 @@ namespace Poke.Infra.Mappings
                 .HasColumnName("growth_rate")
                 .HasColumnType("integer");
 
-            builder.Property(x => x.PokemonId)
-                .HasColumnName("pokemon_id")
-                .HasColumnType("uuid");
+            builder.Property(x => x.PokemonNumber)
+                .HasColumnName("pokemon_number")
+                .HasColumnType("int");
 
             builder.Ignore(x => x.Pokemon);
         }

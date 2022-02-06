@@ -11,17 +11,23 @@ namespace Poke.Infra.Mappings
         {
             builder.ToTable("pokemon", "dbo");
 
-            builder.HasKey(x => x.Id);
+            // builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.Number);
+            // builder.HasIndex(x => x.Number);
+
+            builder.HasKey(x => x.Number);
+
+            builder.HasIndex(x => x.Id);
 
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .HasColumnType("uuid");
+                .HasColumnType("uuid")
+                .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Number)
                 .HasColumnName("number")
                 .HasColumnType("integer")
+                .ValueGeneratedNever()
                 .IsRequired(true);
 
             builder.Property(x => x.Name)
@@ -54,10 +60,12 @@ namespace Poke.Infra.Mappings
 
             builder.HasOne<Training>(x => x.Training)
                 .WithOne(x => x.Pokemon)
+                .HasForeignKey<Training>(x => x.PokemonNumber)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne<BaseStats>(x => x.BaseStats)
                 .WithOne(x => x.Pokemon)
+                .HasForeignKey<BaseStats>(x => x.PokemonNumber)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

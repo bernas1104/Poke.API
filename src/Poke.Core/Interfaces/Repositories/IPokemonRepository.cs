@@ -9,5 +9,6 @@ namespace Poke.Core.Interfaces.Repositories
         Task<IEnumerable<Pokemon>> GetAllAsync();
         Task<bool> PokemonExistsAsync(int number);
         Task<Pokemon> GetByNumberAsync(int number);
+        Task<bool> PokemonsExistAsync(IEnumerable<int> pokemonNumbers);
     }
 }

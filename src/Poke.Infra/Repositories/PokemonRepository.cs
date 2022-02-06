@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Poke.Core.DTOs;
@@ -124,6 +125,30 @@ namespace Poke.Infra.Repositories
             return pokemonDto is not null ?
                 Pokemon.FromPokemonDTO(pokemonDto) :
                 new NullPokemon();
+        }
+
+        public async Task<bool> PokemonsExistAsync(
+            IEnumerable<int> pokemonNumbers
+        )
+        {
+            var query = new StringBuilder(
+                $@"
+                    SELECT COUNT(*)
+                    FROM dbo.pokemon AS p WHERE p.number = {pokemonNumbers.First()}
+                "
+            );
+
+            foreach (var pokemonNumber in pokemonNumbers.Skip(1))
+            {
+                query.Append(@$" OR p.number = {pokemonNumber}");
+            }
+
+            var results = await _dapperContext.DapperConnection.QueryAsync<int>(
+                query.ToString()
+            );
+
+            var count = results.FirstOrDefault();
+            return count >= 1;
         }
 
         private PokemonDTO MapPokemon(

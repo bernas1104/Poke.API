@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Poke.Infra.Context;
@@ -9,43 +10,16 @@ using Poke.Infra.Context;
 namespace Poke.Infra.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [Migration("20220205150441_PokemonIDGen")]
+    partial class PokemonIDGen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-            modelBuilder.Entity("Poke.Core.Entities.Item", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("HeldItem")
-                        .HasColumnType("boolean")
-                        .HasColumnName("held_item");
-
-                    b.Property<int>("ItemType")
-                        .HasColumnType("integer")
-                        .HasColumnName("item_type");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("item", "dbo");
-                });
 
             modelBuilder.Entity("Poke.Core.Entities.Pokemon", b =>
                 {
@@ -120,9 +94,6 @@ namespace Poke.Infra.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("evolution_type");
 
-                    b.Property<Guid?>("HeldItemId")
-                        .HasColumnType("uuid");
-
                     b.Property<int?>("PokemonEvolutionLevel")
                         .HasColumnType("integer")
                         .HasColumnName("pokemon_evolution_level");
@@ -130,8 +101,6 @@ namespace Poke.Infra.Migrations
                     b.HasKey("Id", "ToNumber", "FromNumber");
 
                     b.HasIndex("FromNumber");
-
-                    b.HasIndex("HeldItemId");
 
                     b.HasIndex("ToNumber");
 
@@ -212,17 +181,11 @@ namespace Poke.Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Poke.Core.Entities.Item", "HeldItem")
-                        .WithMany()
-                        .HasForeignKey("HeldItemId");
-
                     b.HasOne("Poke.Core.Entities.Pokemon", "PokemonEvolvesTo")
                         .WithMany("PokemonsEvolveFrom")
                         .HasForeignKey("ToNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("HeldItem");
 
                     b.Navigation("PokemonEvolvesFrom");
 

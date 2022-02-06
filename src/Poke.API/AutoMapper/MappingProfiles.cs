@@ -105,6 +105,15 @@ namespace Poke.API.AutoMapper
             CreateMap<BaseStatsRequest, BaseStatsDTO>();
             CreateMap<TrainingRequest, TrainingDTO>();
             CreateMap<UpdatePokemonByNumberRequest, PokemonDTO>();
+            CreateMap<CreatePokemonEvolutionRequest, PokemonEvolutionDTO>()
+                .ForMember(
+                    x => x.FromNumber,
+                    x => x.NullSubstitute(0)
+                )
+                .ForMember(
+                    x => x.ToNumber,
+                    x => x.NullSubstitute(0)
+                );
         }
     }
 }

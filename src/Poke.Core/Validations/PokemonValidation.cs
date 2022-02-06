@@ -43,6 +43,20 @@ namespace Poke.Core.Validations
             RuleFor(x => x.Training).SetValidator(new TrainingValidation());
 
             RuleFor(x => x.BaseStats).SetValidator(new BaseStatsValidation());
+
+            RuleForEach(x => x.Evolutions).SetValidator(
+                x => new EvolutionValidation(
+                    x.Number,
+                    EvolutionValidation.EVOLUTION
+                )
+            );
+
+            RuleForEach(x => x.PreEvolutions).SetValidator(
+                x => new EvolutionValidation(
+                    x.Number,
+                    EvolutionValidation.PRE_EVOLUTION
+                )
+            );
         }
     }
 }

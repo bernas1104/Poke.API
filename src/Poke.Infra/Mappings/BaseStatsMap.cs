@@ -47,9 +47,9 @@ namespace Poke.Infra.Mappings
                 .HasColumnName("speed")
                 .HasColumnType("integer");
 
-            builder.Property(x => x.PokemonId)
-                .HasColumnName("pokemon_id")
-                .HasColumnType("uuid");
+            builder.Property(x => x.PokemonNumber)
+                .HasColumnName("pokemon_number")
+                .HasColumnType("int");
 
             builder.Ignore(x => x.TotalPoints);
             builder.Ignore(x => x.Pokemon);

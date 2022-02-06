@@ -13,6 +13,7 @@ namespace Poke.Infra.Context
         public DbSet<Training> Tranings { get; set; }
         public DbSet<Evolution> Evolutions { get; set; }
         public DbSet<PreEvolution> PreEvolutions { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         public EntityContext(DbContextOptions<EntityContext> options)
             : base(options) {  }
@@ -23,6 +24,7 @@ namespace Poke.Infra.Context
             modelBuilder.ApplyConfiguration(new BaseStatsMap());
             modelBuilder.ApplyConfiguration(new TrainingMap());
             modelBuilder.ApplyConfiguration(new EvolutionMap());
+            modelBuilder.ApplyConfiguration(new ItemMap());
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
@@ -11,7 +10,7 @@ namespace Poke.Core.ValueObjects
         public int EVYeld { get; protected set; }
         public int BaseFriendship { get; protected set; }
         public GrowthRate GrowthRate { get; protected set; }
-        public Guid PokemonId { get; protected set; }
+        public int PokemonNumber { get; protected set; }
         public Pokemon Pokemon { get; protected set; }
 
         public Training()
@@ -26,13 +25,13 @@ namespace Poke.Core.ValueObjects
 
         public Training(
             int evYeld, int baseFrindship,
-            GrowthRate growthRate, Guid pokemonId
+            GrowthRate growthRate, int pokemonNumber
         )
         {
             EVYeld = evYeld;
             BaseFriendship = baseFrindship;
             GrowthRate = growthRate;
-            PokemonId = pokemonId;
+            PokemonNumber = pokemonNumber;
         }
 
         private Training(TrainingDTO dto) : base(dto.Id)

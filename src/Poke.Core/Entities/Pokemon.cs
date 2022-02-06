@@ -22,8 +22,8 @@ namespace Poke.Core.Entities
         public BaseStats BaseStats { get; protected set; }
         public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveFrom { get => _pokemonsEvolveFrom; }
         public IReadOnlyCollection<AbstractEvolution> PokemonsEvolveTo { get => _pokemonsEvolveTo; }
-        private List<Evolution> _pokemonsEvolveFrom;
-        private List<PreEvolution> _pokemonsEvolveTo;
+        private List<AbstractEvolution> _pokemonsEvolveFrom;
+        private List<AbstractEvolution> _pokemonsEvolveTo;
 
         public Pokemon()
         {
@@ -32,6 +32,7 @@ namespace Poke.Core.Entities
 
         public Pokemon(CreatePokemonRequest request) : base()
         {
+            Id = Guid.NewGuid();
             Number = request.Number;
             Name = request.Name;
             Species = request.Species;
@@ -44,8 +45,47 @@ namespace Poke.Core.Entities
             Training = new Training(request.Training);
             BaseStats = new BaseStats(request.BaseStats);
 
-            _pokemonsEvolveFrom = new List<Evolution>();
-            _pokemonsEvolveTo = new List<PreEvolution>();
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
+
+            SetEvolutionsFromRequest(request.Evolutions);
+            SetPreEvolutionsFromRequest(request.PreEvolutions);
+        }
+
+        private void SetEvolutionsFromRequest(
+            List<CreatePokemonEvolutionRequest> requests
+        )
+        {
+            if (requests is not null)
+            {
+                foreach (var evolutionRequest in requests)
+                {
+                    _pokemonsEvolveTo.Add(
+                        Evolution.FromCreatePokemonEvolutionRequest(
+                            evolutionRequest,
+                            Number
+                        )
+                    );
+                }
+            }
+        }
+
+        private void SetPreEvolutionsFromRequest(
+            List<CreatePokemonEvolutionRequest> requests
+        )
+        {
+            if (requests is not null)
+            {
+                foreach (var preEvolutionRequest in requests)
+                {
+                    _pokemonsEvolveFrom.Add(
+                        PreEvolution.FromCreatePokemonEvolutionRequest(
+                            preEvolutionRequest,
+                            Number
+                        )
+                    );
+                }
+            }
         }
 
         public Pokemon(
@@ -63,8 +103,8 @@ namespace Poke.Core.Entities
             FirstType = first_type;
             SecondType = second_type;
 
-            _pokemonsEvolveFrom = new List<Evolution>();
-            _pokemonsEvolveTo = new List<PreEvolution>();
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
         }
 
         private Pokemon(PokemonDTO dto)
@@ -82,8 +122,8 @@ namespace Poke.Core.Entities
             Training = Training.FromTrainingDTO(dto.Training);
             BaseStats = BaseStats.FromBaseStatsDTO(dto.BaseStats);
 
-            _pokemonsEvolveFrom = new List<Evolution>();
-            _pokemonsEvolveTo = new List<PreEvolution>();
+            _pokemonsEvolveFrom = new List<AbstractEvolution>();
+            _pokemonsEvolveTo = new List<AbstractEvolution>();
         }
 
         public void AddTrainingInformation(Training training)

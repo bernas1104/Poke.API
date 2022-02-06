@@ -7,26 +7,29 @@ namespace Poke.Core.ValueObjects
 {
     public abstract class AbstractEvolution : ValueObject
     {
-        public Guid FromId { get; private set; }
+        public int FromNumber { get; private set; }
         public Pokemon PokemonEvolvesFrom { get; private set; }
-        public Guid ToId { get; private set; }
+        public int ToNumber { get; private set; }
         public Pokemon PokemonEvolvesTo { get; private set; }
         public EvolutionType EvolutionType { get; private set; }
         public int? PokemonEvolutionLevel { get; private set; }
         public EvolutionStone? EvolutionStone { get; private set; }
+        public Guid? HeldItemId { get; private set; }
+        public Item HeldItem { get; private set; }
 
         public AbstractEvolution()
         {
             //
         }
 
-        public AbstractEvolution(PokemonEvolutionDTO dto)
+        protected AbstractEvolution(PokemonEvolutionDTO dto) :
+            base(dto.Id ?? Guid.NewGuid())
         {
-            FromId = dto.FromId;
-            ToId = dto.ToId;
+            FromNumber = dto.FromNumber;
+            ToNumber = dto.ToNumber;
             EvolutionType = (EvolutionType)dto.EvolutionType;
             PokemonEvolutionLevel = dto.PokemonEvolutionLevel;
-            EvolutionStone = (EvolutionStone)dto.EvolutionStone;
+            EvolutionStone = (EvolutionStone?)dto.EvolutionStone;
         }
 
         public void SetPokemonEvolvesFrom(Pokemon pokemonEvolvesFrom)

@@ -1,3 +1,4 @@
+using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 
 namespace Poke.Core.ValueObjects.Evolutions
@@ -9,7 +10,7 @@ namespace Poke.Core.ValueObjects.Evolutions
             //
         }
 
-        public Evolution(PokemonEvolutionDTO dto) : base(dto)
+        protected Evolution(PokemonEvolutionDTO dto) : base(dto)
         {
             //
         }
@@ -17,6 +18,23 @@ namespace Poke.Core.ValueObjects.Evolutions
         public override string ToString()
         {
             throw new System.NotImplementedException();
+        }
+
+        public static Evolution FromCreatePokemonEvolutionRequest(
+            CreatePokemonEvolutionRequest request,
+            int fromPokemonNumber
+        )
+        {
+            return new Evolution(
+                new PokemonEvolutionDTO
+                {
+                    ToNumber = request.ToNumber.Value,
+                    FromNumber = fromPokemonNumber,
+                    EvolutionStone = request.EvolutionStone,
+                    EvolutionType = request.EvolutionType,
+                    PokemonEvolutionLevel = request.PokemonEvolutionLevel
+                }
+            );
         }
     }
 }
