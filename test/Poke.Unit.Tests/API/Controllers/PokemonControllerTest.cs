@@ -153,5 +153,25 @@ namespace Poke.Unit.Tests.API.Controllers
             result.Should().BeOfType<ActionResult<List<CreatePokemonResponse>>>();
             result.Result.Should().BeOfType<OkObjectResult>();
         }
+
+        [Fact]
+        public async Task Should_Return_StatusCode_NoContent_On_Pokemon_Added_Evolution()
+        {
+            // Arrange
+            var request = EvolutionMock.CreatePokemonEvolutionRequestFaker;
+
+            _mediator.Setup(
+                x => x.Send<MediatR.Unit>(
+                    It.IsAny<CreatePokemonEvolutionRequest>(),
+                    default
+                )
+            ).ReturnsAsync(new MediatR.Unit());
+
+            // Act
+            var result = await _controller.AddEvolutionAsync(request);
+
+            // Assert
+            result.Should().BeOfType<NoContentResult>();
+        }
     }
 }

@@ -105,5 +105,10 @@ namespace Poke.Core.Tests.Mocks
                     x => x.Pokemons,
                     f => CreatePokemonRequestFaker.Generate(f.Random.Int(1, 3))
                 );
+
+        public static Faker<GetPokemonEvolutionPairRequest> GetPokemonEvolutionPairRequestFaker =>
+            new Faker<GetPokemonEvolutionPairRequest>()
+                .RuleFor(x => x.FromNumber, f => f.Random.Int(1, 74))
+                .RuleFor(x => x.ToNumber, f => f.Random.Int(75, 151));
     }
 }

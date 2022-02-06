@@ -64,6 +64,30 @@ namespace Poke.Unit.Tests.Core.Validations
             validationResult.Errors.Count.Should().Be(1);
         }
 
+        [Theory]
+        [InlineData(0, 152)]
+        [InlineData(152, 0)]
+        public void Should_Invalidate_Evolution_If_Any_Pokemon_Number_Invalid(
+            int fromNumber, int toNumber
+        )
+        {
+            // Arrange
+            _validator = new EvolutionValidation(
+                default, EvolutionValidation.BOTH
+            );
+
+            var dto = EvolutionMock.PokemonEvolutionDtoFaker
+                .RuleFor(x => x.FromNumber, fromNumber)
+                .RuleFor(x => x.ToNumber, toNumber);
+
+            // Act
+            var validationResult = _validator.Validate(dto);
+
+            // Assert
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Errors.Count.Should().Be(2);
+        }
+
         [Fact]
         public void Should_Invalidate_Evolution_If_Evolves_FromTo_Pokemon_With_Same_Number()
         {
@@ -72,6 +96,28 @@ namespace Poke.Unit.Tests.Core.Validations
 
             _validator = new EvolutionValidation(
                 pokemonNumber, _faker.Random.Int(1, 2)
+            );
+
+            var dto = EvolutionMock.PokemonEvolutionDtoFaker
+                .RuleFor(x => x.ToNumber, pokemonNumber)
+                .RuleFor(x => x.FromNumber, pokemonNumber);
+
+            // Act
+            var validationResult = _validator.Validate(dto);
+
+            // Assert
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Errors.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public void Should_Invalidate_Evolution_If_Evolves_Both_Pokemon_With_Same_Number()
+        {
+            // Arrange
+            var pokemonNumber = _faker.Random.Int(1, 151);
+
+            _validator = new EvolutionValidation(
+                default, EvolutionValidation.BOTH
             );
 
             var dto = EvolutionMock.PokemonEvolutionDtoFaker
