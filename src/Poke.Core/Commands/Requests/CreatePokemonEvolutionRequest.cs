@@ -5,7 +5,7 @@ using Poke.Core.ValueObjects;
 
 namespace Poke.Core.Commands.Requests
 {
-    public record CreatePokemonEvolutionRequest : IRequest<List<AbstractEvolution>>
+    public record CreatePokemonEvolutionRequest : IRequest<Unit>
     {
         public int? ToNumber { get; init; }
         public int? FromNumber { get; init; }

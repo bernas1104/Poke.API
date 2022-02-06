@@ -150,6 +150,28 @@ namespace Poke.Core.Entities
             BaseStats.UpdatePokemonBaseStatsData(request.BaseStats);
         }
 
+        public void SetPokemonEvolutions(List<AbstractEvolution> evolutions)
+        {
+            _pokemonsEvolveTo = evolutions;
+        }
+
+        public void SetPokemonPreEvolutions(
+            List<AbstractEvolution> preEvolutions
+        )
+        {
+            _pokemonsEvolveFrom = preEvolutions;
+        }
+
+        public void AddPokemonEvolution(Evolution evolution)
+        {
+            _pokemonsEvolveTo.Add(evolution);
+        }
+
+        public void AddPokemonPreEvolution(PreEvolution preEvolution)
+        {
+            _pokemonsEvolveFrom.Add(preEvolution);
+        }
+
         public static Pokemon FromPokemonDTO(PokemonDTO dto)
         {
             return new Pokemon(dto);

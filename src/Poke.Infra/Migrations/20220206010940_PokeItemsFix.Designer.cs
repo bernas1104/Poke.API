@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Poke.Infra.Context;
@@ -9,9 +10,10 @@ using Poke.Infra.Context;
 namespace Poke.Infra.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [Migration("20220206010940_PokeItemsFix")]
+    partial class PokeItemsFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,8 +112,7 @@ namespace Poke.Infra.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("discriminator");
+                        .HasColumnType("text");
 
                     b.Property<int?>("EvolutionStone")
                         .HasColumnType("integer")

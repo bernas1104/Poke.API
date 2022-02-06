@@ -101,5 +101,14 @@ namespace Poke.API.Controllers.V1
                 )
             );
         }
+
+        [HttpPatch("evolution")]
+        public async Task<ActionResult> AddEvolutionAsync(
+            [FromBody] CreatePokemonEvolutionRequest request
+        )
+        {
+            await _mediator.Send<Unit>(request);
+            return NoContent();
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +11,13 @@ using Poke.Core.Queries.Requests;
 
 namespace Poke.API.Handlers
 {
-    public class GetPokemonByNumberHandler :
-        IRequestHandler<GetPokemonByNumberRequest, Pokemon>
+    public class GetPokemonEvolutionPairHandler :
+        IRequestHandler<GetPokemonEvolutionPairRequest, List<Pokemon>>
     {
         private readonly IPokemonRepository _repository;
         private readonly IDomainNotification _domainNotification;
 
-        public GetPokemonByNumberHandler(
+        public GetPokemonEvolutionPairHandler(
             IPokemonRepository repository,
             IDomainNotification domainNotification
         )
@@ -26,35 +26,29 @@ namespace Poke.API.Handlers
             _domainNotification = domainNotification;
         }
 
-        public async Task<Pokemon> Handle(
-            GetPokemonByNumberRequest request,
+        public async Task<List<Pokemon>> Handle(
+            GetPokemonEvolutionPairRequest request,
             CancellationToken cancellationToken
         )
         {
-            var pokemon = await _repository.GetByNumberAsync(request.Number);
+            var pokemons = await _repository.GetPokemonEvolutionPair(
+                request.FromNumber,
+                request.ToNumber
+            );
 
-            if (pokemon.IsNull)
+            if (pokemons.Count < 2)
             {
                 _domainNotification.AddNotification(
                     new NotificationMessage(
                         "Error",
-                        $"Pokemon of number #{request.Number} not found.",
+                        "One or both pokemon not found.",
                         HttpStatusCode.NotFound
                     )
                 );
+                return new List<Pokemon>();
             }
 
-            var evolutions = await _repository.GetAllPokemonEvolutionsByNumber(
-                pokemon.Number
-            );
-            var preEvolutions = await _repository.GetAllPokemonPreEvolutionsByNumber(
-                pokemon.Number
-            );
-
-            pokemon.SetPokemonEvolutions(evolutions.ToList());
-            pokemon.SetPokemonPreEvolutions(preEvolutions.ToList());
-
-            return pokemon;
+            return pokemons;
         }
     }
 }

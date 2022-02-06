@@ -44,6 +44,11 @@ namespace Poke.Infra.Mappings
                 .HasColumnType("integer")
                 .IsRequired(false);
 
+            builder.Property(x => x.HeldItemId)
+                .HasColumnName("held_item_id")
+                .HasColumnType("uuid")
+                .IsRequired(false);
+
             builder.HasOne<Pokemon>(x => x.PokemonEvolvesFrom)
                 .WithMany(x => x.PokemonsEvolveTo)
                 .HasForeignKey(x => x.FromNumber);
@@ -51,6 +56,10 @@ namespace Poke.Infra.Mappings
             builder.HasOne<Pokemon>(x => x.PokemonEvolvesTo)
                 .WithMany(x => x.PokemonsEvolveFrom)
                 .HasForeignKey(x => x.ToNumber);
+
+            builder.Property("Discriminator")
+                .HasColumnName("discriminator")
+                .HasColumnType("varchar(50)");
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Poke.Core.Validations
     {
         public static readonly int EVOLUTION = 0x1;
         public static readonly int PRE_EVOLUTION = 0x2;
+        public static readonly int BOTH = 0x4;
         private readonly int BasePokemonNumber;
         private readonly int Evolution;
 
@@ -19,12 +20,12 @@ namespace Poke.Core.Validations
             RuleFor(x => x.FromNumber)
                 .InclusiveBetween(1, 151)
                 .WithMessage("Pokemon must evolve from a pokemon with a valid number.")
-                .When(x => Evolution == PRE_EVOLUTION);
+                .When(x => Evolution == PRE_EVOLUTION || Evolution == BOTH);
 
             RuleFor(x => x.ToNumber)
                 .InclusiveBetween(1, 151)
                 .WithMessage("Pokemon must evolve to a pokemon with a valid number.")
-                .When(x => Evolution == EVOLUTION);
+                .When(x => Evolution == EVOLUTION || Evolution == BOTH);
 
             RuleFor(x => x)
                 .Must(ValidateDiferentPokemonNumbers)
@@ -55,9 +56,12 @@ namespace Poke.Core.Validations
             if (Evolution == EVOLUTION)
             {
                 return dto.ToNumber != BasePokemonNumber;
+            } else if (Evolution == PRE_EVOLUTION)
+            {
+                return dto.FromNumber != BasePokemonNumber;
             }
 
-            return dto.FromNumber != BasePokemonNumber;
+            return dto.FromNumber != dto.ToNumber;
         }
     }
 }

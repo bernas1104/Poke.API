@@ -6,6 +6,7 @@ using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Queries.Response;
 using Poke.Core.ValueObjects;
+using Poke.Core.ValueObjects.Evolutions;
 
 namespace Poke.API.AutoMapper
 {
@@ -69,6 +70,14 @@ namespace Poke.API.AutoMapper
                     x => x.MapFrom(
                         y => y.SecondType.AsString(EnumFormat.Description)
                     )
+                )
+                .ForMember(
+                    x => x.PreEvolutions,
+                    x => x.MapFrom(y => y.PokemonsEvolveFrom)
+                )
+                .ForMember(
+                    x => x.Evolutions,
+                    x => x.MapFrom(y => y.PokemonsEvolveTo)
                 );
 
             CreateMap<Training, TrainingQueryResponse>()
@@ -114,6 +123,14 @@ namespace Poke.API.AutoMapper
                     x => x.ToNumber,
                     x => x.NullSubstitute(0)
                 );
+
+            CreateMap<AbstractEvolution, EvolutionQueryResponse>();
+            CreateMap<Evolution, EvolutionQueryResponse>()
+                .IncludeBase<AbstractEvolution, EvolutionQueryResponse>()
+                .IncludeAllDerived();
+            CreateMap<PreEvolution, EvolutionQueryResponse>()
+                .IncludeBase<AbstractEvolution, EvolutionQueryResponse>()
+                .IncludeAllDerived();
         }
     }
 }
