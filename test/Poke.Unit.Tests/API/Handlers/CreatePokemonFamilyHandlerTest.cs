@@ -34,7 +34,7 @@ namespace Poke.Unit.Tests.API.Handlers
             var request = PokemonMock.CreatePokemonFamilyRequestFaker
                 .RuleFor(
                     x => x.Pokemons,
-                    PokemonMock.CreatePokemonRequestFaker
+                    PokemonMock.CreatePokemonWithEvolutionsRequestFaker
                         .RuleFor(x => x.Number, 0)
                         .Generate(1)
                 );

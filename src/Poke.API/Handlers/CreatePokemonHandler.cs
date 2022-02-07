@@ -69,7 +69,9 @@ namespace Poke.API.Handlers
                 return new NullPokemon();
             }
 
-            var pokemon = new Pokemon(request);
+            var pokemon = Pokemon.FromPokemonDTO(
+                _mapper.Map<PokemonDTO>(request)
+            );
 
             _repository.Add(pokemon);
             _unitOfWork.Commit();

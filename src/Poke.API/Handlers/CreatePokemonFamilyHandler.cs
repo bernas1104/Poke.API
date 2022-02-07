@@ -75,7 +75,9 @@ namespace Poke.API.Handlers
 
             foreach (var pokemonRequest in request.Pokemons)
             {
-                var pokemon = new Pokemon(pokemonRequest);
+                var pokemon = Pokemon.FromPokemonDTO(
+                    _mapper.Map<PokemonDTO>(pokemonRequest)
+                );
                 _repository.Add(pokemon);
                 pokemonFamily.Add(pokemon);
             }

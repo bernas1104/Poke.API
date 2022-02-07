@@ -4,16 +4,16 @@ namespace Poke.Core.Entities
 {
     public abstract class Aggregate
     {
-        public Guid Id { get; protected set; }
+        public Guid Id { get; private set; }
 
         public Aggregate()
         {
             //
         }
 
-        public Aggregate(Guid id)
+        public Aggregate(Guid? id)
         {
-            Id = id;
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
         }
 
         public virtual bool IsNull => false;

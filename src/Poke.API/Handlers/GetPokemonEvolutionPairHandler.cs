@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,6 +47,17 @@ namespace Poke.API.Handlers
                     )
                 );
                 return new List<Pokemon>();
+            }
+
+            foreach(var pokemon in pokemons)
+            {
+                var evolutions = await _repository
+                    .GetAllPokemonEvolutionsByNumber(pokemon.Number);
+                var preEvolutions = await _repository
+                    .GetAllPokemonPreEvolutionsByNumber(pokemon.Number);
+
+                pokemon.SetPokemonEvolutions(evolutions.ToList());
+                pokemon.SetPokemonPreEvolutions(preEvolutions.ToList());
             }
 
             return pokemons;
