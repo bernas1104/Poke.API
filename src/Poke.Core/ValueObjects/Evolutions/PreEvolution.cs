@@ -1,4 +1,3 @@
-using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 
 namespace Poke.Core.ValueObjects.Evolutions
@@ -21,7 +20,7 @@ namespace Poke.Core.ValueObjects.Evolutions
         }
 
         public static PreEvolution FromCreatePokemonEvolutionRequest(
-            CreatePokemonEvolutionRequest request,
+            PokemonEvolutionDTO dto,
             int toPokemonNumber
         )
         {
@@ -29,10 +28,10 @@ namespace Poke.Core.ValueObjects.Evolutions
                 new PokemonEvolutionDTO
                 {
                     ToNumber = toPokemonNumber,
-                    FromNumber = request.FromNumber.Value,
-                    EvolutionType = request.EvolutionType,
-                    EvolutionStone = request.EvolutionStone,
-                    PokemonEvolutionLevel = request.PokemonEvolutionLevel
+                    FromNumber = dto.FromNumber,
+                    EvolutionType = dto.EvolutionType,
+                    EvolutionStone = dto.EvolutionStone,
+                    PokemonEvolutionLevel = dto.PokemonEvolutionLevel
                 }
             );
         }

@@ -6,6 +6,6 @@ namespace Poke.Core.Commands.Requests
 {
     public record CreatePokemonFamilyRequest : IRequest<List<Pokemon>>
     {
-        public List<CreatePokemonRequest> Pokemons { get; init; }
+        public List<CreatePokemonWithEvolutionsRequest> Pokemons { get; init; }
     }
 }

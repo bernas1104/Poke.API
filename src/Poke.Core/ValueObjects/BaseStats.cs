@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
@@ -72,6 +73,16 @@ namespace Poke.Core.ValueObjects
             SpecialAttack = new Point(request.SpecialAttack);
             SpecialDefense = new Point(request.SpecialDefense);
             Speed = new Point(request.Speed);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return HitPoints.Value;
+            yield return Attack.Value;
+            yield return Defense.Value;
+            yield return SpecialAttack.Value;
+            yield return SpecialDefense.Value;
+            yield return Speed.Value;
         }
     }
 }

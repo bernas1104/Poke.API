@@ -1,3 +1,4 @@
+using System;
 using Poke.Core.ValueObjects.Nullables;
 
 namespace Poke.Core.Entities.Nullables
@@ -6,7 +7,6 @@ namespace Poke.Core.Entities.Nullables
     {
         public NullPokemon()
         {
-            Id = default;
             Number = default;
             Name = default;
             Species = default;

@@ -120,7 +120,7 @@ namespace Poke.Infra.Repositories
                 pokemons.Add(Pokemon.FromPokemonDTO(dto));
             }
 
-            return pokemons;
+            return pokemons.OrderBy(x => x.Number);
         }
 
         public async Task<Pokemon> GetByNumberAsync(int number)

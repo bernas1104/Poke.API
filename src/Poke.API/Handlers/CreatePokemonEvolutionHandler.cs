@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +10,7 @@ using Poke.Core.Entities;
 using Poke.Core.Interfaces.Notifications;
 using Poke.Core.Interfaces.Repositories;
 using Poke.Core.Interfaces.UoW;
+using Poke.Core.Notifications;
 using Poke.Core.Queries.Requests;
 using Poke.Core.Validations;
 using Poke.Core.ValueObjects.Evolutions;
@@ -76,17 +78,59 @@ namespace Poke.API.Handlers
             }
 
             var evolvesTo = Evolution.FromCreatePokemonEvolutionRequest(
-                request, pokemons[1].Number
+                _mapper.Map<PokemonEvolutionDTO>(request),
+                pokemons.FirstOrDefault(x => x.Number == request.FromNumber)
+                    .Number
             );
             var evolvesFrom = PreEvolution.FromCreatePokemonEvolutionRequest(
-                request, pokemons[0].Number
+                _mapper.Map<PokemonEvolutionDTO>(request),
+                pokemons.FirstOrDefault(x => x.Number == request.ToNumber)
+                    .Number
             );
+
+            if (
+                !AreEvolutionAndPreEvolutionValid(
+                    evolvesTo, evolvesFrom, pokemons
+                )
+            )
+            {
+                return unit;
+            }
 
             _evolutionRepository.Add(evolvesTo);
             _evolutionRepository.Add(evolvesFrom);
             _unitOfWork.Commit();
 
             return unit;
+        }
+
+        private bool AreEvolutionAndPreEvolutionValid(
+            Evolution evolution, PreEvolution preEvolution, List<Pokemon> pokemons
+        )
+        {
+            if (
+                pokemons.Any(
+                    x => x.PokemonsEvolveTo.Any(
+                        y => y.Equals(evolution) ||
+                            y.Equals(preEvolution)
+                    ) ||
+                    x.PokemonsEvolveFrom.Any(
+                        y => y.Equals(evolution) ||
+                            y.Equals(preEvolution)
+                    )
+                )
+            )
+            {
+                _domainNotification.AddNotification(
+                    new NotificationMessage(
+                        "Error",
+                        "Pokemon evolution already registered"
+                    )
+                );
+                return false;
+            }
+
+            return true;
         }
     }
 }
