@@ -105,6 +105,7 @@ namespace Poke.API
             services.AddScoped<DapperContext>();
             services.AddScoped<IPokemonRepository, PokemonRepository>();
             services.AddScoped<IEvolutionRepository, EvolutionRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDomainNotification, DomainNotification>();
 
