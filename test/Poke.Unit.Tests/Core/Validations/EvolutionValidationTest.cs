@@ -209,7 +209,7 @@ namespace Poke.Unit.Tests.Core.Validations
         }
 
         [Fact]
-        public void Should_Invalidate_Evolution_If_HeldItemId_Invalid()
+        public void Should_Invalidate_Evolution_If_HeldItemName_Invalid()
         {
             // Arrange
             _validator = new EvolutionValidation(
@@ -220,7 +220,7 @@ namespace Poke.Unit.Tests.Core.Validations
                 .RuleFor(x => x.ToNumber, _faker.Random.Int(75, 151))
                 .RuleFor(x => x.FromNumber, _faker.Random.Int(75, 151))
                 .RuleFor(x => x.EvolutionType, (int)EvolutionType.TradeWithItem)
-                .RuleFor(x => x.HeldItemId, () => null);
+                .RuleFor(x => x.HeldItemName, () => null);
 
             // Act
             var validationResult = _validator.Validate(dto);

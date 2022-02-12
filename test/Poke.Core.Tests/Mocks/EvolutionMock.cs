@@ -16,6 +16,7 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.PokemonEvolutionLevel, f => f.Random.Int(2, 100))
                 .RuleFor(x => x.EvolutionType, (int)EvolutionType.Level)
                 .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9))
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word())
                 .RuleFor(x => x.HeldItemId, Guid.NewGuid());
 
         public static Faker<PokemonEvolutionDTO> PokemonPreEvolutionDtoFaker =>
@@ -24,6 +25,7 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.PokemonEvolutionLevel, f => f.Random.Int(2, 100))
                 .RuleFor(x => x.EvolutionType, (int)EvolutionType.Level)
                 .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9))
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word())
                 .RuleFor(x => x.HeldItemId, Guid.NewGuid());
 
         public static Faker<CreatePokemonEvolutionRequest> CreatePokemonEvolutionRequestFaker =>
