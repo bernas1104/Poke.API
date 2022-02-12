@@ -1,6 +1,7 @@
 using Bogus;
 using Poke.Core.Commands.Requests;
 using Poke.Core.Entities;
+using Poke.Core.Queries.Requests;
 
 namespace Poke.Core.Tests.Mocks
 {
@@ -14,5 +15,9 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.ItemType, f => f.Random.Int(0, 7));
 
         public static Faker<Item> ItemFaker => new Faker<Item>();
+
+        public static Faker<GetItemByNameRequest> GetItemByNameRequestFaker =>
+            new Faker<GetItemByNameRequest>()
+                .RuleFor(x => x.Name, f => f.Random.Word());
     }
 }

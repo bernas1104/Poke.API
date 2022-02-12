@@ -32,7 +32,7 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.EvolutionType, (int)EvolutionType.Level)
                 .RuleFor(x => x.PokemonEvolutionLevel, f => f.Random.Int(2, 100))
                 .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9))
-                .RuleFor(x => x.HeldItemId, Guid.NewGuid());
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word());
 
         public static Faker<CreatePokemonEvolutionRequest> CreatePokemonPreEvolutionRequestFaker =>
             new Faker<CreatePokemonEvolutionRequest>()
@@ -40,7 +40,7 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(x => x.EvolutionType, (int)EvolutionType.Level)
                 .RuleFor(x => x.PokemonEvolutionLevel, f => f.Random.Int(2, 100))
                 .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9))
-                .RuleFor(x => x.HeldItemId, Guid.NewGuid());
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word());
 
         public static Faker<AbstractEvolution> AbstractEvolutionFaker(
             bool evolution

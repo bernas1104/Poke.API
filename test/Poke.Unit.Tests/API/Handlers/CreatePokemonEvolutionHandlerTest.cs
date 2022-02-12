@@ -6,6 +6,8 @@ using Moq;
 using Poke.API.Handlers;
 using Poke.Core.Commands.Requests;
 using Poke.Core.Entities;
+using Poke.Core.Entities.Nullables;
+using Poke.Core.Enums;
 using Poke.Core.Interfaces.Repositories;
 using Poke.Core.Notifications;
 using Poke.Core.Queries.Requests;
@@ -155,7 +157,7 @@ namespace Poke.Unit.Tests.API.Handlers
         }
 
         [Fact]
-        public async Task Should_Create_Pokemon_Evolution()
+        public async Task Should_Not_Create_Pokemon_Evolution_If_EvolutionStone_Not_Found()
         {
             // Arrange
             var fromNumber = _faker.Random.Int(1, 74);
@@ -163,7 +165,9 @@ namespace Poke.Unit.Tests.API.Handlers
 
             var request = EvolutionMock.CreatePokemonEvolutionRequestFaker
                 .RuleFor(x => x.FromNumber, fromNumber)
-                .RuleFor(x => x.ToNumber, toNumber);
+                .RuleFor(x => x.ToNumber, toNumber)
+                .RuleFor(x => x.EvolutionType, (int)EvolutionType.Stone)
+                .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9));
 
             var pokemons = new List<Pokemon>
             {
@@ -187,6 +191,172 @@ namespace Poke.Unit.Tests.API.Handlers
                     default
                 )
             ).ReturnsAsync(pokemons);
+
+            _mediator.Setup(
+                x => x.Send<Item>(It.IsAny<GetItemByNameRequest>(), default)
+            ).ReturnsAsync(new NullItem());
+
+            // Act
+            await _handler.Handle(request, default);
+
+            // Assert
+            _evolutionRepository.Verify(
+                x => x.Add(It.IsAny<AbstractEvolution>()),
+                Times.Never
+            );
+
+            _unitOfWork.Verify(x => x.Commit(), Times.Never);
+        }
+
+        [Fact]
+        public async Task Should_Not_Create_Pokemon_Evolution_If_HeldItem_Not_Found()
+        {
+            // Arrange
+            var fromNumber = _faker.Random.Int(1, 74);
+            var toNumber = _faker.Random.Int(75, 151);
+
+            var request = EvolutionMock.CreatePokemonEvolutionRequestFaker
+                .RuleFor(x => x.FromNumber, fromNumber)
+                .RuleFor(x => x.ToNumber, toNumber)
+                .RuleFor(x => x.EvolutionType, (int)EvolutionType.TradeWithItem)
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word());
+
+            var pokemons = new List<Pokemon>
+            {
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, fromNumber)
+                    .Generate(),
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, toNumber)
+                    .Generate()
+            };
+
+            foreach (var pokemon in pokemons)
+            {
+                pokemon.SetPokemonEvolutions(new List<AbstractEvolution>());
+                pokemon.SetPokemonPreEvolutions(new List<AbstractEvolution>());
+            }
+
+            _mediator.Setup(
+                x => x.Send<List<Pokemon>>(
+                    It.IsAny<GetPokemonEvolutionPairRequest>(),
+                    default
+                )
+            ).ReturnsAsync(pokemons);
+
+            _mediator.Setup(
+                x => x.Send<Item>(It.IsAny<GetItemByNameRequest>(), default)
+            ).ReturnsAsync(new NullItem());
+
+            // Act
+            await _handler.Handle(request, default);
+
+            // Assert
+            _evolutionRepository.Verify(
+                x => x.Add(It.IsAny<AbstractEvolution>()),
+                Times.Never
+            );
+
+            _unitOfWork.Verify(x => x.Commit(), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public async Task Should_Create_Pokemon_Evolution_Without_Item(
+            int evolutionType
+        )
+        {
+            // Arrange
+            var fromNumber = _faker.Random.Int(1, 74);
+            var toNumber = _faker.Random.Int(75, 151);
+
+            var request = EvolutionMock.CreatePokemonEvolutionRequestFaker
+                .RuleFor(x => x.FromNumber, fromNumber)
+                .RuleFor(x => x.ToNumber, toNumber)
+                .RuleFor(x => x.EvolutionType, evolutionType);
+
+            var pokemons = new List<Pokemon>
+            {
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, fromNumber)
+                    .Generate(),
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, toNumber)
+                    .Generate()
+            };
+
+            foreach (var pokemon in pokemons)
+            {
+                pokemon.SetPokemonEvolutions(new List<AbstractEvolution>());
+                pokemon.SetPokemonPreEvolutions(new List<AbstractEvolution>());
+            }
+
+            _mediator.Setup(
+                x => x.Send<List<Pokemon>>(
+                    It.IsAny<GetPokemonEvolutionPairRequest>(),
+                    default
+                )
+            ).ReturnsAsync(pokemons);
+
+            // Act
+            await _handler.Handle(request, default);
+
+            // Assert
+            _evolutionRepository.Verify(
+                x => x.Add(It.IsAny<AbstractEvolution>()),
+                Times.Exactly(2)
+            );
+
+            _unitOfWork.Verify(x => x.Commit(), Times.Once);
+        }
+
+        [Fact]
+        public async Task Should_Create_Pokemon_Evolution_With_Item()
+        {
+            // Arrange
+            var fromNumber = _faker.Random.Int(1, 74);
+            var toNumber = _faker.Random.Int(75, 151);
+
+            var request = EvolutionMock.CreatePokemonEvolutionRequestFaker
+                .RuleFor(x => x.FromNumber, fromNumber)
+                .RuleFor(x => x.ToNumber, toNumber)
+                .RuleFor(x => x.EvolutionStone, f => f.Random.Int(0, 9))
+                .RuleFor(x => x.HeldItemName, f => f.Random.Word())
+                .RuleFor(
+                    x => x.EvolutionType,
+                    f => f.Random.Bool() ?
+                        (int)EvolutionType.Stone :
+                        (int)EvolutionType.TradeWithItem
+                );
+
+            var pokemons = new List<Pokemon>
+            {
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, fromNumber)
+                    .Generate(),
+                PokemonMock.PokemonFaker
+                    .RuleFor(x => x.Number, toNumber)
+                    .Generate()
+            };
+
+            foreach (var pokemon in pokemons)
+            {
+                pokemon.SetPokemonEvolutions(new List<AbstractEvolution>());
+                pokemon.SetPokemonPreEvolutions(new List<AbstractEvolution>());
+            }
+
+            _mediator.Setup(
+                x => x.Send<List<Pokemon>>(
+                    It.IsAny<GetPokemonEvolutionPairRequest>(),
+                    default
+                )
+            ).ReturnsAsync(pokemons);
+
+            _mediator.Setup(
+                x => x.Send<Item>(It.IsAny<GetItemByNameRequest>(), default)
+            ).ReturnsAsync(ItemMock.ItemFaker);
 
             // Act
             await _handler.Handle(request, default);
