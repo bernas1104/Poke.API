@@ -14,69 +14,63 @@ using Poke.Core.Validations;
 
 namespace Poke.API.Handlers
 {
-    public class CreatePokemonHandler :
-        IRequestHandler<CreatePokemonRequest, Pokemon>
+    public class CreateItemHandler : IRequestHandler<CreateItemRequest, Item>
     {
-        private readonly PokemonValidation _validator;
-        private readonly IPokemonRepository _repository;
+        private readonly IItemRepository _repository;
         private readonly IMapper _mapper;
         private readonly IDomainNotification _domainNotification;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ItemValidation _validator;
+        private readonly NullItem Null;
 
-        public CreatePokemonHandler(
-            IPokemonRepository pokemonRepository,
+        public CreateItemHandler(
+            IItemRepository repository,
             IMapper mapper,
             IDomainNotification domainNotification,
             IUnitOfWork unitOfWork
         )
         {
-            _validator = new PokemonValidation();
-
-            _repository = pokemonRepository;
+            _repository = repository;
             _mapper = mapper;
             _domainNotification = domainNotification;
             _unitOfWork = unitOfWork;
+
+            _validator = new ItemValidation();
+            Null = new NullItem();
         }
 
-        public async Task<Pokemon> Handle(
-            CreatePokemonRequest request,
+        public async Task<Item> Handle(
+            CreateItemRequest request,
             CancellationToken cancellationToken
         )
         {
-            var validationResult = _validator.Validate(
-                _mapper.Map<PokemonDTO>(request)
-            );
+            var itemDTO = _mapper.Map<ItemDTO>(request);
+            var validationResult = _validator.Validate(itemDTO);
             if (!validationResult.IsValid)
             {
                 _domainNotification.AddValidationNotifications(
                     validationResult
                 );
-                return new NullPokemon();
+                return Null;
             }
 
-            var pokemonExists = await _repository.PokemonExistsAsync(
-                request.Number
-            );
-
-            if (pokemonExists)
+            var itemExists = await _repository.ExistsByNameAsync(itemDTO.Name);
+            if (itemExists)
             {
                 _domainNotification.AddNotification(
                     new NotificationMessage(
                         "Error",
-                        $"Pokemon of number #{request.Number} already exists."
+                        $"Item {itemDTO.Name} already exists."
                     )
                 );
-                return new NullPokemon();
+                return Null;
             }
 
-            var pokemon = Pokemon.FromPokemonDTO(
-                _mapper.Map<PokemonDTO>(request)
-            );
-
-            _repository.Add(pokemon);
+            var item = Item.FromDTO(itemDTO);
+            _repository.Add(item);
             _unitOfWork.Commit();
 
-            return pokemon;
+            return item;
         }
     }
 }

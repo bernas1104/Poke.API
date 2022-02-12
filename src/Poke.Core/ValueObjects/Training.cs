@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
@@ -51,6 +52,14 @@ namespace Poke.Core.ValueObjects
         public static Training FromTrainingDTO(TrainingDTO dto)
         {
             return new Training(dto);
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return EVYeld;
+            yield return BaseFriendship;
+            yield return GrowthRate;
+            yield return PokemonNumber;
         }
     }
 }

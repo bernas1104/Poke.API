@@ -4,7 +4,6 @@ using Bogus;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
-using Poke.Core.Enums;
 using Poke.Core.Queries.Requests;
 using Poke.Core.Queries.Response;
 
@@ -20,16 +19,26 @@ namespace Poke.Core.Tests.Mocks
                         var pkmnGuid = Guid.NewGuid();
 
                         var undefined = f.Random.Bool();
+                        var pokemonDto = new PokemonDTO
+                        {
+                            Id = Guid.NewGuid(),
+                            Number = f.Random.Int(1, 151),
+                            Name = f.Person.FirstName,
+                            Species = f.Random.Word(),
+                            Height = f.Random.Double(1, 10),
+                            Weight = f.Random.Double(1, 500),
+                            ImageUrl = f.Internet.Url(),
+                            FirstType = f.Random.Int(1, 8),
+                            SecondType = undefined ? 0 : f.Random.Int(9, 15),
+                            BaseStats = BaseStatsMock.BaseStatsDTOFaker,
+                            Training = TrainingMock.TrainingDTOFaker,
+                            Evolutions = EvolutionMock.PokemonEvolutionDtoFaker
+                                .Generate(f.Random.Int(0, 2)),
+                            PreEvolutions = EvolutionMock.PokemonPreEvolutionDtoFaker
+                                .Generate(f.Random.Int(0, 2))
+                        };
 
-                        return new Pokemon(
-                            pkmnGuid, f.Random.Int(1, 151), f.Person.FirstName,
-                            f.Random.Word(), f.Random.Double(1, 10),
-                            f.Random.Double(1, 500), f.Internet.Url(),
-                            (PokemonType)f.Random.Int(1, 8),
-                            undefined ?
-                                PokemonType.Undefined :
-                                (PokemonType)f.Random.Int(9, 15)
-                        );
+                        return Pokemon.FromPokemonDTO(pokemonDto);
                     }
                 );
 
@@ -47,16 +56,6 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(
                     x => x.Training,
                     TrainingMock.TrainingRequestFaker
-                )
-                .RuleFor(
-                    x => x.Evolutions,
-                    f => EvolutionMock.CreatePokemonEvolutionRequestFaker
-                        .Generate(f.Random.Int(0, 1))
-                )
-                .RuleFor(
-                    x => x.PreEvolutions,
-                    f => EvolutionMock.CreatePokemonPreEvolutionRequestFaker
-                        .Generate(f.Random.Int(0, 1))
                 );
 
         public static Faker<PokemonDTO> PokemonDTOFaker =>
@@ -97,13 +96,6 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(
                     x => x.Training,
                     TrainingMock.TrainingRequestFaker
-                );
-
-        public static Faker<CreatePokemonFamilyRequest> CreatePokemonFamilyRequestFaker =>
-            new Faker<CreatePokemonFamilyRequest>()
-                .RuleFor(
-                    x => x.Pokemons,
-                    f => CreatePokemonRequestFaker.Generate(f.Random.Int(1, 3))
                 );
 
         public static Faker<GetPokemonEvolutionPairRequest> GetPokemonEvolutionPairRequestFaker =>

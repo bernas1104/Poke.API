@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
 using Poke.Core.Enums;
@@ -43,5 +44,11 @@ namespace Poke.Core.ValueObjects
         }
 
         public abstract override string ToString();
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return FromNumber;
+            yield return ToNumber;
+        }
     }
 }

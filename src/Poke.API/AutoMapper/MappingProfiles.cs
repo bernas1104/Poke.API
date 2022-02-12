@@ -131,6 +131,22 @@ namespace Poke.API.AutoMapper
             CreateMap<PreEvolution, EvolutionQueryResponse>()
                 .IncludeBase<AbstractEvolution, EvolutionQueryResponse>()
                 .IncludeAllDerived();
+
+            CreateMap<CreateItemRequest, ItemDTO>();
+            CreateMap<Item, CreateItemResponse>()
+                .ForMember(
+                    x => x.ItemTypeDescription,
+                    x => x.MapFrom(
+                        y => y.ItemType.AsString(EnumFormat.Description)
+                    )
+                );
+            CreateMap<Item, ItemQueryResponse>()
+                .ForMember(
+                    x => x.ItemTypeDescription,
+                    x => x.MapFrom(
+                        y => y.ItemType.AsString(EnumFormat.Description)
+                    )
+                );
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Poke.Core.DTOs
 {
     public record PokemonDTO
     {
-        public Guid Id { get; init; }
+        public Guid? Id { get; init; }
         public int Number { get; init; }
         public string Name { get; init; }
         public string Species { get; init; }

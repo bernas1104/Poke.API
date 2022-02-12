@@ -135,26 +135,6 @@ namespace Poke.Unit.Tests.API.Controllers
         }
 
         [Fact]
-        public async Task Should_Return_StatusCode_Ok_On_Pokemon_Family_Created()
-        {
-            // Arrange
-            var request = PokemonMock.CreatePokemonFamilyRequestFaker
-                .Generate();
-
-            _mediator.Setup(x => x.Send<List<Pokemon>>(request, default))
-                .ReturnsAsync(
-                    PokemonMock.PokemonFaker.Generate(_faker.Random.Int(1, 3))
-                );
-
-            // Act
-            var result = await _controller.CreatePokemonFamilyAsync(request);
-
-            // Assert
-            result.Should().BeOfType<ActionResult<List<CreatePokemonResponse>>>();
-            result.Result.Should().BeOfType<OkObjectResult>();
-        }
-
-        [Fact]
         public async Task Should_Return_StatusCode_NoContent_On_Pokemon_Added_Evolution()
         {
             // Arrange

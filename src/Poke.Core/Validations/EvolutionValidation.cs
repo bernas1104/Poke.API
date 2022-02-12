@@ -45,10 +45,13 @@ namespace Poke.Core.Validations
                 .WithMessage("Pokemon evolution stone invalid.")
                 .When(x => (EvolutionType)x.EvolutionType == EvolutionType.Stone);
 
-            RuleFor(x => x.HeldItemId)
+            RuleFor(x => x.HeldItemName)
                 .NotEmpty()
                 .WithMessage("Pokemon held item invalid.")
-                .When(x => (EvolutionType)x.EvolutionType == EvolutionType.TradeWithItem);
+                .When(
+                    x => (EvolutionType)x.EvolutionType ==
+                        EvolutionType.TradeWithItem
+                );
         }
 
         private bool ValidateDiferentPokemonNumbers(PokemonEvolutionDTO dto)

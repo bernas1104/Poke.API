@@ -1,4 +1,3 @@
-using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 
 namespace Poke.Core.ValueObjects.Evolutions
@@ -21,18 +20,18 @@ namespace Poke.Core.ValueObjects.Evolutions
         }
 
         public static Evolution FromCreatePokemonEvolutionRequest(
-            CreatePokemonEvolutionRequest request,
+            PokemonEvolutionDTO dto,
             int fromPokemonNumber
         )
         {
             return new Evolution(
                 new PokemonEvolutionDTO
                 {
-                    ToNumber = request.ToNumber.Value,
+                    ToNumber = dto.ToNumber,
                     FromNumber = fromPokemonNumber,
-                    EvolutionStone = request.EvolutionStone,
-                    EvolutionType = request.EvolutionType,
-                    PokemonEvolutionLevel = request.PokemonEvolutionLevel
+                    EvolutionStone = dto.EvolutionStone,
+                    EvolutionType = dto.EvolutionType,
+                    PokemonEvolutionLevel = dto.PokemonEvolutionLevel
                 }
             );
         }

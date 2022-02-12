@@ -90,18 +90,6 @@ namespace Poke.API.Controllers.V1
             return NoContent();
         }
 
-        [HttpPost("family")]
-        public async Task<ActionResult<List<CreatePokemonResponse>>> CreatePokemonFamilyAsync(
-            [FromBody] CreatePokemonFamilyRequest request
-        )
-        {
-            return Ok(
-                _mapper.Map<List<CreatePokemonResponse>>(
-                    await _mediator.Send<List<Pokemon>>(request)
-                )
-            );
-        }
-
         [HttpPatch("evolution")]
         public async Task<ActionResult> AddEvolutionAsync(
             [FromBody] CreatePokemonEvolutionRequest request

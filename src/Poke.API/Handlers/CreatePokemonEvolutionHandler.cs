@@ -1,14 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using EnumsNET;
 using MediatR;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
+using Poke.Core.Enums;
 using Poke.Core.Interfaces.Notifications;
 using Poke.Core.Interfaces.Repositories;
 using Poke.Core.Interfaces.UoW;
+using Poke.Core.Notifications;
 using Poke.Core.Queries.Requests;
 using Poke.Core.Validations;
 using Poke.Core.ValueObjects.Evolutions;
@@ -76,17 +80,87 @@ namespace Poke.API.Handlers
             }
 
             var evolvesTo = Evolution.FromCreatePokemonEvolutionRequest(
-                request, pokemons[1].Number
+                _mapper.Map<PokemonEvolutionDTO>(request),
+                pokemons.FirstOrDefault(x => x.Number == request.FromNumber)
+                    .Number
             );
             var evolvesFrom = PreEvolution.FromCreatePokemonEvolutionRequest(
-                request, pokemons[0].Number
+                _mapper.Map<PokemonEvolutionDTO>(request),
+                pokemons.FirstOrDefault(x => x.Number == request.ToNumber)
+                    .Number
             );
+
+            if (
+                !AreEvolutionAndPreEvolutionValid(evolvesTo, evolvesFrom, pokemons) ||
+                !(await IsEvolutionItemValid(request))
+            )
+            {
+                return unit;
+            }
 
             _evolutionRepository.Add(evolvesTo);
             _evolutionRepository.Add(evolvesFrom);
             _unitOfWork.Commit();
 
             return unit;
+        }
+
+        private bool AreEvolutionAndPreEvolutionValid(
+            Evolution evolution, PreEvolution preEvolution, List<Pokemon> pokemons
+        )
+        {
+            if (
+                pokemons.Any(
+                    x => x.PokemonsEvolveTo.Any(
+                        y => y.Equals(evolution) ||
+                            y.Equals(preEvolution)
+                    ) ||
+                    x.PokemonsEvolveFrom.Any(
+                        y => y.Equals(evolution) ||
+                            y.Equals(preEvolution)
+                    )
+                )
+            )
+            {
+                _domainNotification.AddNotification(
+                    new NotificationMessage(
+                        "Error",
+                        "Pokemon evolution already registered"
+                    )
+                );
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> IsEvolutionItemValid(
+            CreatePokemonEvolutionRequest request
+        )
+        {
+            if (
+                request.EvolutionType != (int)EvolutionType.Stone &&
+                request.EvolutionType != (int)EvolutionType.TradeWithItem
+            )
+            {
+                return true;
+            }
+
+            var itemRequest = new GetItemByNameRequest
+            {
+                Name = request.EvolutionType == (int)EvolutionType.Stone ?
+                    ((EvolutionStone)request.EvolutionStone.Value)
+                        .AsString(EnumFormat.Description) :
+                    request.HeldItemName
+            };
+
+            var item = await _mediator.Send<Item>(itemRequest);
+            if (item.IsNull)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
