@@ -58,32 +58,6 @@ namespace Poke.Core.Tests.Mocks
                     TrainingMock.TrainingRequestFaker
                 );
 
-        public static Faker<CreatePokemonWithEvolutionsRequest> CreatePokemonWithEvolutionsRequestFaker =>
-            new Faker<CreatePokemonWithEvolutionsRequest>()
-                .RuleFor(x => x.Number, f => f.Random.Int(1, 151))
-                .RuleFor(x => x.Name, f => f.Random.Word())
-                .RuleFor(x => x.Species, f => f.Random.Word())
-                .RuleFor(x => x.Height, f => f.Random.Double(0.01, 100))
-                .RuleFor(x => x.Weight, f => f.Random.Double(0.01, 100))
-                .RuleFor(x => x.ImageUrl, f => f.Internet.Url())
-                .RuleFor(x => x.FirstType, f => f.Random.Int(1, 15))
-                .RuleFor(x => x.SecondType, f => f.Random.Int(0, 15))
-                .RuleFor(x => x.BaseStats, BaseStatsMock.BaseStatsRequestFaker)
-                .RuleFor(
-                    x => x.Training,
-                    TrainingMock.TrainingRequestFaker
-                )
-                .RuleFor(
-                    x => x.Evolutions,
-                    f => EvolutionMock.CreatePokemonEvolutionRequestFaker
-                        .Generate(f.Random.Int(0, 1))
-                )
-                .RuleFor(
-                    x => x.PreEvolutions,
-                    f => EvolutionMock.CreatePokemonPreEvolutionRequestFaker
-                        .Generate(f.Random.Int(0, 1))
-                );
-
         public static Faker<PokemonDTO> PokemonDTOFaker =>
             new Faker<PokemonDTO>()
                 .RuleFor(x => x.Number, f => f.Random.Int(1, 151))
@@ -122,15 +96,6 @@ namespace Poke.Core.Tests.Mocks
                 .RuleFor(
                     x => x.Training,
                     TrainingMock.TrainingRequestFaker
-                );
-
-        public static Faker<CreatePokemonFamilyRequest> CreatePokemonFamilyRequestFaker =>
-            new Faker<CreatePokemonFamilyRequest>()
-                .RuleFor(
-                    x => x.Pokemons,
-                    f => CreatePokemonWithEvolutionsRequestFaker.Generate(
-                        f.Random.Int(1, 3)
-                    )
                 );
 
         public static Faker<GetPokemonEvolutionPairRequest> GetPokemonEvolutionPairRequestFaker =>
