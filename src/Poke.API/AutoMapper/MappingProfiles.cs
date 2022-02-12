@@ -140,6 +140,13 @@ namespace Poke.API.AutoMapper
                         y => y.ItemType.AsString(EnumFormat.Description)
                     )
                 );
+            CreateMap<Item, ItemQueryResponse>()
+                .ForMember(
+                    x => x.ItemTypeDescription,
+                    x => x.MapFrom(
+                        y => y.ItemType.AsString(EnumFormat.Description)
+                    )
+                );
         }
     }
 }

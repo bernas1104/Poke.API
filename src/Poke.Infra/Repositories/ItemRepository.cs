@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -27,6 +28,22 @@ namespace Poke.Infra.Repositories
         ) : base(context)
         {
             _dapperContext = dapperContext;
+        }
+
+        public async Task<List<Item>> GetAllAsync()
+        {
+            var items = new List<Item>();
+            var itemDTOs = await _dapperContext.DapperConnection
+                .QueryAsync<ItemDTO>(
+                    _selectStatements
+                );
+
+            foreach (var itemDTO in itemDTOs)
+            {
+                items.Add(Item.FromDTO(itemDTO));
+            }
+
+            return items;
         }
 
         public async Task<Item> GetByNameAsync(string name)
