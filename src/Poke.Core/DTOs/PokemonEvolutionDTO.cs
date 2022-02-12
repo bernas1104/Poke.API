@@ -11,6 +11,7 @@ namespace Poke.Core.DTOs
         public int? PokemonEvolutionLevel { get; init; }
         public int? EvolutionStone { get; init; }
         public Guid? HeldItemId { get; init; }
+        public string HeldItemName { get; init; }
         public string Discriminator { get; init; }
     }
 }

@@ -12,6 +12,6 @@ namespace Poke.Core.Commands.Requests
         public int EvolutionType { get; init; }
         public int? PokemonEvolutionLevel { get; init; }
         public int? EvolutionStone { get; init; }
-        public Guid? HeldItemId { get; init; }
+        public string HeldItemName { get; init; }
     }
 }

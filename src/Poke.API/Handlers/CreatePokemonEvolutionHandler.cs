@@ -3,10 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using EnumsNET;
 using MediatR;
 using Poke.Core.Commands.Requests;
 using Poke.Core.DTOs;
 using Poke.Core.Entities;
+using Poke.Core.Enums;
 using Poke.Core.Interfaces.Notifications;
 using Poke.Core.Interfaces.Repositories;
 using Poke.Core.Interfaces.UoW;
@@ -89,9 +91,8 @@ namespace Poke.API.Handlers
             );
 
             if (
-                !AreEvolutionAndPreEvolutionValid(
-                    evolvesTo, evolvesFrom, pokemons
-                )
+                !AreEvolutionAndPreEvolutionValid(evolvesTo, evolvesFrom, pokemons) ||
+                !(await IsEvolutionItemValid(request))
             )
             {
                 return unit;
@@ -127,6 +128,35 @@ namespace Poke.API.Handlers
                         "Pokemon evolution already registered"
                     )
                 );
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> IsEvolutionItemValid(
+            CreatePokemonEvolutionRequest request
+        )
+        {
+            if (
+                request.EvolutionType != (int)EvolutionType.Stone &&
+                request.EvolutionType != (int)EvolutionType.TradeWithItem
+            )
+            {
+                return true;
+            }
+
+            var itemRequest = new GetItemByNameRequest
+            {
+                Name = request.EvolutionType == (int)EvolutionType.Stone ?
+                    ((EvolutionStone)request.EvolutionStone.Value)
+                        .AsString(EnumFormat.Description) :
+                    request.HeldItemName
+            };
+
+            var item = await _mediator.Send<Item>(itemRequest);
+            if (item.IsNull)
+            {
                 return false;
             }
 
